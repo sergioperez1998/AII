@@ -32,9 +32,9 @@ def obtenerDatos():
         for ul in listaLi.find_all(class_="threadstats td alt"):
             for contenido in ul.find_all("li"):
                 if contenido.a != None:
-                    listadoRespuestas.append(contenido.a.string)
+                    listadoRespuestas.append("Respuestas: "+contenido.a.string)
                 if "Visitas: " in contenido.get_text():
-                    listadoVisitas.append(contenido.get_text().strip("Visitas: "))
+                    listadoVisitas.append(contenido.get_text())
                     
     return listadoTitulos, listadoEnlaces, listadoNombres,listadoFechas,listadoRespuestas,listadoVisitas    
     
@@ -92,6 +92,20 @@ def imprimir_etiqueta(cursor):
     lb.pack(side = LEFT, fill = BOTH)
     sc.config(command = lb.yview)
 
+def imprimir_etiqueta2(cursor):
+    v = Toplevel()
+    sc = Scrollbar(v)
+    sc.pack(side=RIGHT, fill=Y)
+    lb = Listbox(v, width=150, yscrollcommand=sc.set)
+    for row in cursor:
+        lb.insert(END,row[0])
+        lb.insert(END,row[1])
+        lb.insert(END,row[2])
+        lb.insert(END,row[3])
+        lb.insert(END,'')
+    lb.pack(side = LEFT, fill = BOTH)
+    sc.config(command = lb.yview)
+
 def buscar_bdTema():
     def listar_busquedaTema(event):
         conn = sqlite3.connect('PRACTICA1.db')
@@ -127,15 +141,15 @@ def buscar_bdFecha():
 def listar_Popu():
     conn = sqlite3.connect('PRACTICA1.db')
     conn.text_factory = str  
-    cursor = conn.execute("SELECT TITULO,NOMBRE,FECHA,VISITA FROM DERECHO WHERE VISITA = (SELECT max(VISITA) FROM DERECHO) LIMIT 5")
-    imprimir_etiqueta(cursor)
+    cursor = conn.execute("SELECT TITULO,NOMBRE,FECHA,VISITA FROM DERECHO order by VISITA desc LIMIT 5" )
+    imprimir_etiqueta2(cursor)
     conn.close()
     
 def listar_Activos():
     conn = sqlite3.connect('PRACTICA1.db')
     conn.text_factory = str  
-    cursor = conn.execute("SELECT TITULO,NOMBRE,FECHA,RESPUESTA FROM DERECHO WHERE RESPUESTA = (SELECT max(RESPUESTA) FROM DERECHO LIMIT 5)")
-    imprimir_etiqueta(cursor)
+    cursor = conn.execute("SELECT TITULO,NOMBRE,FECHA,RESPUESTA FROM DERECHO order by RESPUESTA desc LIMIT 5")
+    imprimir_etiqueta2(cursor)
     conn.close()
     
 
