@@ -7,13 +7,13 @@ import sqlite3
 def ventanaPrincipal():
     top = Tk()
 
-    almacenarDatos = Button(top, text="Almacenar datos", command = obtenerDatos)
+    almacenarDatos = Button(top, text="Almacenar datos", fg = "Green", command = obtenerDatos)
     almacenarDatos.pack(side = LEFT)
 
-    mostrarMarca = Button(top, text="Mostrar marca", command = obtenerMarca)
+    mostrarMarca = Button(top, text="Mostrar marca", fg = "Purple", command = obtenerMarca)
     mostrarMarca.pack(side = LEFT)
 
-    buscarOfertas = Button(top, text="Buscar ofertas", command = obtenerOferta)
+    buscarOfertas = Button(top, text="Buscar ofertas", fg = "Blue", command = obtenerOferta)
     buscarOfertas.pack(side = RIGHT)
 
     top.mainloop()
@@ -35,18 +35,16 @@ def obtenerOferta():
     scrollbar.pack( side = RIGHT, fill = Y )
 
     listbox = Listbox(top, yscrollcommand = scrollbar.set)
-    listbox.insert(1, "Python")
-    listbox.insert(2, "Perl")
-    listbox.insert(3, "C")
-    listbox.insert(4, "PHP")
-    listbox.insert(5, "JSP")
-    listbox.insert(6, "Ruby")
-    listbox.insert(7, "Prueba1")
-    listbox.insert(8, "Prueba2")
-    listbox.insert(9, "Prueba3")
-    listbox.insert(10, "Prueba4")
-    listbox.insert(11, "Prueba5")
-    listbox.insert(12, "Prueba6")
+
+    conn = sqlite3.connect('PRACTICA2.db')
+    cursor = conn.execute("SELECT NOMBRE,PRECIOSINOFERTA,PRECIOCONOFERTA FROM OFERTA")
+
+    for row in cursor:
+        i = 0
+        index = 1
+        listbox.insert(index,row[i])
+        i = i+1
+        index = index+1
 
     listbox.pack()
     scrollbar.config(command = listbox.yview)
