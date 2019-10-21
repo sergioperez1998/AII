@@ -37,14 +37,12 @@ def obtenerOferta():
     listbox = Listbox(top, yscrollcommand = scrollbar.set)
 
     conn = sqlite3.connect('PRACTICA2.db')
-    cursor = conn.execute("SELECT NOMBRE,PRECIOSINOFERTA,PRECIOCONOFERTA FROM OFERTA")
+    cursor = conn.execute("SELECT NOMBRE,PRECIOSINOFERTA,PRECIOCONOFERTA FROM OFERTA WHERE PRECIOSINOFERTA NOT NULL")
 
     for row in cursor:
-        i = 0
         index = 1
-        listbox.insert(index,row[i])
-        i = i+1
-        index = index+1
+        listbox.insert(index,row)
+        index = index + 1
 
     listbox.pack()
     scrollbar.config(command = listbox.yview)
