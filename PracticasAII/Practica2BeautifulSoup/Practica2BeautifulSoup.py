@@ -6,6 +6,7 @@ import datetime
 from tkinter import *
 import sqlite3
 from tkinter import messagebox
+from tkinter import ttk
 
 def obtencionDatos():
     
@@ -46,7 +47,7 @@ def obtencionDatos():
     
     return listadoMarcas,listadoNombres,listadoLinks,listadoPrecioActual,listadoPrecioSinOferta
    
-           
+          
 def ventanaPrincipal():
     top = Tk()
 
@@ -56,41 +57,11 @@ def ventanaPrincipal():
     mostrarMarca = Button(top, text="Mostrar marca", fg = "Purple", command = seleccionar_marca)
     mostrarMarca.pack(side = LEFT)
 
-    buscarOfertas = Button(top, text="Buscar ofertas", fg = "Blue", command = obtenerOferta)
+    buscarOfertas = Button(top, text="Buscar ofertas", fg = "Blue", command = listar_bd)
     buscarOfertas.pack(side = RIGHT)
 
     top.mainloop()
-
-def obtenerDatos():
-    top = Tk()
-
-    top.mainloop()
-
-def obtenerMarca():
-    top = Tk()
-
-    top.mainloop()
-
-def obtenerOferta():
-    top = Tk()
-
-    scrollbar = Scrollbar(top)
-    scrollbar.pack( side = RIGHT, fill = Y )
-
-    listbox = Listbox(top, yscrollcommand = scrollbar.set)
-
-    conn = sqlite3.connect('PRACTICA2.db')
-    cursor = conn.execute("SELECT NOMBRE,PRECIOSINOFERTA,PRECIOCONOFERTA FROM OFERTA WHERE PRECIOSINOFERTA NOT NULL")
-
-    for row in cursor:
-        index = 1
-        listbox.insert(index,row)
-        index = index + 1
-
-    listbox.pack()
-    scrollbar.config(command = listbox.yview)
-
-    top.mainloop()
+    
 def almacenar_bd():
     
     conn = sqlite3.connect('PRACTICA2.db')
@@ -125,31 +96,59 @@ def almacenar_bd():
     conn.close()
     
 def seleccionar_marca():
-    l = obtencionDatos()
-    marcas=l[0]
-    master = Tk()
-    marca = Spinbox(master, values=marcas)
-    marca.pack()
-    boton1=Button(master, text="Seleccionar", command=listar_bd(marca.get()))
-    boton1.pack(side = LEFT)
-    master.mainloop()
     
-
-def listar_bd(marca):
-        
-          
+    def listarMarcas():
+     
         conn = sqlite3.connect('PRACTICA2.db')
         conn.text_factory = str  
-        
-        cursor = conn.execute("""SELECT NOMBRE,PRECIOACTUAL FROM ALIMENTOS WHERE MARCA = ?""",(marca,))
-        imprimir_etiqueta(cursor)
+        s = spinbox.get()
+        cursor = conn.execute("""SELECT NOMBRE,PRECIOACTUAL FROM ALIMENTOS WHERE MARCA = ?""",(s,))
+        imprimir_etiquetaMarcas(cursor)
         conn.close()
     
+    listaMarcasCursor=[]
+    conn = sqlite3.connect('PRACTICA2.db')
+    cursor = conn.execute("SELECT MARCA FROM ALIMENTOS")
+    for row in cursor:
+        if row in listaMarcasCursor:
+            break
+        else:
+            listaMarcasCursor.append(row[0])
+    master = Tk()
+    spinbox=ttk.Combobox(master, values=listaMarcasCursor,  state='readonly') 
+    spinbox.grid(column=1, row=0, padx=10, pady=10)
+    boton=ttk.Button(master, text="Seleccionar", command=listarMarcas)
+    boton.grid(column=0, row=1, padx=10, pady=10)
+   
     
-    
-    
+
+def listar_bd():
+    conn = sqlite3.connect('PRACTICA2.db')
+    conn.text_factory = str  
+    cursor = conn.execute("SELECT NOMBRE,PRECIOACTUAL,PRECIOSINOFERTA FROM ALIMENTOS")
+    imprimir_etiqueta(cursor)
+    conn.close()
     
 def imprimir_etiqueta(cursor):
+    
+    v = Toplevel()
+    sc = Scrollbar(v)
+    sc.pack(side=RIGHT, fill=Y)
+    lb = Listbox(v, width=150, yscrollcommand=sc.set)
+    for row in cursor:
+        lb.insert(END,row[0])
+        if row[2] == None:
+            lb.insert(END,"Precio actual: "+row[1])
+        else:
+            lb.insert(END,"Precio en oferta: "+row[1])
+            lb.insert(END,"Precio sin oferta: "+row[2])
+        lb.insert(END,'')
+    lb.pack(side = LEFT, fill = BOTH)
+    sc.config(command = lb.yview)
+    
+    
+def imprimir_etiquetaMarcas(cursor):
+    
     v = Toplevel()
     sc = Scrollbar(v)
     sc.pack(side=RIGHT, fill=Y)
