@@ -108,14 +108,10 @@ def seleccionar_marca():
     
     listaMarcasCursor=[]
     conn = sqlite3.connect('PRACTICA2.db')
-    cursor = conn.execute("SELECT MARCA FROM ALIMENTOS")
-    for row in cursor:
-        if row in listaMarcasCursor:
-            break
-        else:
-            listaMarcasCursor.append(row[0])
+    cursor = conn.execute("SELECT DISTINCT MARCA FROM ALIMENTOS")
+    listaMarcasCursor= [x[0] for x in cursor]
     master = Tk()
-    spinbox=ttk.Combobox(master, values=listaMarcasCursor,  state='readonly') 
+    spinbox=ttk.Spinbox(master, values=listaMarcasCursor,  state='readonly') 
     spinbox.grid(column=1, row=0, padx=10, pady=10)
     boton=ttk.Button(master, text="Seleccionar", command=listarMarcas)
     boton.grid(column=0, row=1, padx=10, pady=10)
