@@ -1,8 +1,3 @@
-'''
-Created on 24 oct. 2019
-
-@author: sergi
-'''
 #Esto son los imports:
 encoding = "utf-8"
 from bs4 import BeautifulSoup
