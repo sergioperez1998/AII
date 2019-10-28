@@ -37,8 +37,8 @@ def almacenar_bd():
         MARCA           TEXT    NOT NULL,
         PRECIO           TEXT NOT NULL,
         PRECIOOFERTA        TEXT,
-        ESTRELLAS         TEXT NOT NULL,
-        PUNTUACIONES        INTEGER);''')
+        ESTRELLA         TEXT NOT NULL,
+        PUNTUACION        INTEGER);''')
     
     l = obtencionDatos()
     
