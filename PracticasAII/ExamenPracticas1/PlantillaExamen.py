@@ -35,44 +35,37 @@ def almacenar_bd():
     
     conn = sqlite3.connect('EXAMEN1.db')
     conn.text_factory = str  # para evitar problemas con el conjunto de caracteres que maneja la BD
-    conn.execute("DROP TABLE IF EXISTS EXAMEN")   
-    conn.execute('''CREATE TABLE EXAMEN
+    conn.execute("DROP TABLE IF EXISTS ZAPATILLAS")   
+    conn.execute('''CREATE TABLE ZAPATILLAS
        (ID INTEGER PRIMARY KEY  AUTOINCREMENT,
-        A           TEXT    NOT NULL,
-        B           TEXT    NOT NULL,
-        C           TEXT NOT NULL,
-        D        TEXT   NOT NULL,
-        E         TEXT    );''')
+        NOMBRE           TEXT    NOT NULL,
+        MARCA           TEXT    NOT NULL,
+        PRECIO           TEXT NOT NULL,
+        PRECIOOFERTA        TEXT,
+        ESTRELLAS         TEXT NOT NULL,
+        PUNTUACIONES        INTEGER);''')
     
     l = obtencionDatos()
     
     i=0
-    A=l[0]
-    B=l[1]
-    C=l[2]
-    D=l[3]
-    E=l[4]
+    nombre=l[0]
+    marca=l[1]
+    precio=l[2]
+    precioOferta=l[3]
+    estrellas=l[4]
+    puntuaciones=l[5]
    
     
-    while i < len(A):
+    while i < len(nombre):
         
-        conn.execute("""INSERT INTO EXAMEN1 (A, B, C, D, E) VALUES (?,?,?,?,?)""",(A[i],B[i],C[i], D[i], E[i]))
+        conn.execute("""INSERT INTO ZAPATILLAS (NOMBRE, MARCA, PRECIO, PRECIOOFERTA, ESTRELLA, PUNTUACION) VALUES (?,?,?,?,?,?)""",(nombre[i],marca[i],precio[i], precioOferta[i], estrellas[i], puntuaciones[i]))
         i=i+1
 
     conn.commit()
-    cursor = conn.execute("SELECT COUNT(*) FROM EXAMEN1")
+    cursor = conn.execute("SELECT COUNT(*) FROM ZAPATILLAS")
     messagebox.showinfo( "Base Datos", "Base de datos creada correctamente \nHay " + str(cursor.fetchone()[0]) + " registros")
     conn.close()
-    
-#PARA LISTADOS NORMALES:
 
-def listar_bd():
-    conn = sqlite3.connect('EXAMEN1.db')
-    conn.text_factory = str  
-    cursor = conn.execute("SELECT A,B,C FROM EXAMEN1")
-    imprimir_etiqueta(cursor)
-    conn.close()
-    
 def imprimir_etiqueta(cursor):
     
     v = Toplevel()
@@ -85,46 +78,109 @@ def imprimir_etiqueta(cursor):
         lb.insert(END,+row[2])
         lb.insert(END,'')
     lb.pack(side = LEFT, fill = BOTH)
-    sc.config(command = lb.yview)
+    sc.config(command = lb.yview)    
     
-#PARA LOS BUSCAR NORMALES:
-
-def buscar_bdTema():
-    def listar_busquedaTema(event):
-        conn = sqlite3.connect('EXAMEN1.db')
-        conn.text_factory = str
-        s = "%"+en.get()+"%" 
-        cursor = conn.execute("""SELECT A,B,C FROM EXAMEN1 WHERE TITULO LIKE ?""",(s,)) # al ser de tipo string, el ? le pone comillas simples
-        imprimir_etiqueta(cursor)
-        conn.close()
-    
-    v = Toplevel()
-    lb = Label(v, text="Introduzca tema: ")
-    lb.pack(side = LEFT)
-    en = Entry(v)
-    en.bind("<Return>", listar_busquedaTema)
-    en.pack(side = LEFT)    
-    
-
 #VENTANA PRINCIPAL:
 
 def ventanaPrincipal():
     top = Tk()
 
-    almacenarDatos = Button(top, text="ACCION1", fg = "Green", command = A)
+    almacenarDatos = Button(top, text="Datos", command = ventanaDatos)
     almacenarDatos.pack(side = LEFT)
 
-    mostrarMarca = Button(top, text="ACCION2", fg = "Purple", command = B)
-    mostrarMarca.pack(side = LEFT)
-
-    buscarOfertas = Button(top, text="ACCION3", fg = "Blue", command = C)
+    buscarOfertas = Button(top, text="Buscar", command = ventanaBuscar)
     buscarOfertas.pack(side = RIGHT)
 
     top.mainloop()
 
+def ventanaDatos():
+    top = Tk()
+
+    cargarDatos = Button(top, text="Cargar", command = almacenar_bd)
+    cargarDatos.pack(side = LEFT)
+
+    salir = Button(top, text= "Salir", command = ventanaPrincipal)
+    salir.pack(side = RIGHT)
+
+    top.mainloop()
+
+def ventanaBuscar():
+    top = Tk()
+
+    nombre = Button(top, text="Nombre", command = ventanaNombre)
+    nombre.pack(side = LEFT)
+
+    ordenarPuntuacion = Button(top, text="ORdenar por Puntuación", command = ventanaOrdenar)
+    ordenarPuntuacion.pack(side = LEFT)
+
+    marcas = Button(top, text="Marcas", command = ventanaMarcas)
+    marcas.pack(side = RIGHT)
+
+    top.mainloop()
+
+def ventanaNombre():
+    def buscarNombre():
+        conn = sqlite3.connect('EXAMEN1.db')
+        conn.text_factory = str
+        s = "%"+entry.get()+"%" 
+        cursor = conn.execute("""SELECT NOMBRE,MARCA,PRECIO FROM ZAPATILLAS WHERE NOMBRE LIKE ?""",(s,)) # al ser de tipo string, el ? le pone comillas simples
+        imprimir_etiqueta(cursor)
+        conn.close()
+
+    top = Tk()
+
+    L1 = Label(top, text="Introduzca un nombre:")
+    L1.pack(side=LEFT)
+    entry = Entry(top, bd = 5)
+    entry.bind("<Return>", buscarNombre)
+    entry.pack(side = RIGHT)
+
+    top.mainloop()
+
+def ventanaOrdenar():
+    conn = sqlite3.connect('EXAMEN1.db')
+    conn.text_factory = str
+    cursor = conn.execute("""SELECT NOMBRE,PRECIO,PUNTUACION FROM ZAPATILLAS WHERE PUNTUACION > 5 ORDER BY ASC""")
+    imprimir_etiqueta(cursor)
+    conn.close()
+
+def ventanaMarcas():
+    def listarMarcas():
+        conn = sqlite3.connect('EXAMEN1.db')
+        conn.text_factory = str  
+        s = spinbox.get()
+        cursor = conn.execute("""SELECT NOMBRE,MARCA,PRECIO,PUNTUACION FROM ZAPATILLAS WHERE MARCA = ?""",(s,))
+        imprimir_etiquetaMarcas(cursor)
+        conn.close()
+
+    listaMarcasCursor=[]
+    conn = sqlite3.connect('EXAMEN1.db')
+    cursor = conn.execute("SELECT DISTINCT MARCA FROM ZAPATILLAS")
+    listaMarcasCursor= [x[0] for x in cursor]
+    master = Tk()
+    spinbox=ttk.Spinbox(master, values=listaMarcasCursor,  state='readonly') 
+    spinbox.grid(column=1, row=0, padx=10, pady=10)
+    boton=ttk.Button(master, text="Seleccionar", command=listarMarcas)
+    boton.grid(column=0, row=1, padx=10, pady=10)
+
+def imprimir_etiquetaMarcas(cursor):
+    
+    v = Toplevel()
+    sc = Scrollbar(v)
+    sc.pack(side=RIGHT, fill=Y)
+    lb = Listbox(v, width=150, yscrollcommand=sc.set)
+    for row in cursor:
+        lb.insert(END,row[0])
+        lb.insert(END,row[1])
+        lb.insert(END,row[2])
+        lb.insert(END,row[3])
+        lb.insert(END,'')
+    lb.pack(side = LEFT, fill = BOTH)
+    sc.config(command = lb.yview)
+
 #PARA REALIZAR LA LLAMADA A LA VENTANA PRINCIPAL:
-'''
+
 if __name__ == "__main__":
     ventanaPrincipal()
-'''
+
 
