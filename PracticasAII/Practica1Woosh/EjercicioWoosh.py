@@ -1,3 +1,4 @@
+encoding:'utf-8'
 from bs4 import BeautifulSoup
 import urllib.request as urllib2
 import datetime
@@ -11,6 +12,8 @@ import datetime
 import calendar
 import urllib.request
 import locale; 
+import re
+from unicodedata import normalize
 
 def obtenerDatos():
     
@@ -53,20 +56,14 @@ def obtenerDatos():
                     listadoVisitasTema.append(contenido.get_text())
                     
     for enlace in listadoEnlacesTema:
-        
-        print(enlace)
-        f = urllib.request.urlopen(enlace)
-        s = BeautifulSoup(f,"lxml")
-        os.environ["PYTHONIOENCODING"] = "utf-8";
-        myLocale=locale.setlocale(category=locale.LC_ALL, locale="en_GB.UTF-8");
-        print(s.encode('utf-8', errors='ignore'))
-       
-        '''
-        
-        listadoRespuestas=[]
-        listaFechaRespuesta=[]
-        listadoTextoRespuesta=[]
-        listadoNombreRespuesta=[]
-        '''
-
+    
+        s = re.sub(r"([^n\u0300-\u036f]|n(?!\u0303(?![\u0300-\u036f])))[\u0300-\u036f]+", r"\1", 
+        normalize("NFD", enlace), 0, re.I)
+   
+        s = normalize('NFC', s)
+        print(s)
+        response = urllib2.urlopen(s)
+        webContent = response.read()
+        soup2 = BeautifulSoup(webContent, 'html.parser')
+   
 print(obtenerDatos())
