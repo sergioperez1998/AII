@@ -18,6 +18,7 @@ from unicodedata import normalize
 def obtenerDatos():
     
     url = "https://foros.derecho.com/foro/34-Derecho-Inmobiliario"
+    url2 = "https://foros.derecho.com/"
     response = urllib2.urlopen(url)
     webContent = response.read()
     soup = BeautifulSoup(webContent, 'html.parser')
@@ -33,7 +34,7 @@ def obtenerDatos():
     for listaLi in threads.findAll("li"):
         for listaH3 in listaLi.findAll("h3"):
             listadoTitulosTema.append(listaH3.a.string)
-            listadoEnlacesTema.append(url+str(listaH3.a.get('href')))
+            listadoEnlacesTema.append(url2+str(listaH3.a.get('href')))
         autores2 = listaLi.findAll(class_="author")
         for i in autores2:
             nombres = str(i.find("a").string)
@@ -61,9 +62,16 @@ def obtenerDatos():
         normalize("NFD", enlace), 0, re.I)
    
         s = normalize('NFC', s)
-        print(s)
+        #print(s)
         response = urllib2.urlopen(s)
         webContent = response.read()
         soup2 = BeautifulSoup(webContent, 'html.parser')
+        
+        listaFechaRespuesta=[]
+        
+        for date in soup2.findAll("span", attrs={"class":"date"}):
+            a=(date.get_text().split(","))
+            fecha = a[0] + a[1]
+            listaFechaRespuesta.append(fecha)
    
 print(obtenerDatos())
