@@ -71,7 +71,51 @@ def obtenerDatos():
         
         for date in soup2.findAll("span", attrs={"class":"date"}):
             a=(date.get_text().split(","))
-            fecha = a[0] + a[1]
-            listaFechaRespuesta.append(fecha)
+            fechas = a[0] + a[1]
+            
+            if "Ayer" in fechas:
+                ahora = datetime.datetime.utcnow()
+                ayer = ahora - datetime.timedelta(days=1)
+                fechaDeAyer = str(ayer.day)+"/"+str(ayer.month)+'/'+str(ayer.year)+' '+fechas.strip("Ayer ")
+                
+                fechasCasting= datetime.datetime.strptime(fechaDeAyer, '%d/%m/%Y %H:%M')
+                listaFechaRespuesta.append(fechasCasting)
+            else:
+                fechasCasting= datetime.datetime.strptime(fechas, '%d/%m/%Y %H:%M')
+                listaFechaRespuesta.append(fechasCasting)
+                
+            
+        
+        print(listaFechaRespuesta)    
+        #No funciona  bien el codigo apartir de aqui 
+        #Funcionalidad deseada: eliminar de la listaFechaRespuesta todas las fechas que nos sean de respuestas
+        #es decir, la primera fecha de cada lista, dentro de la lista listaFechaRespuesta.
+        #Observacion:Hay elementos en la lista listaFechaRepuesta que no  son listas sino datetime.datetime
+    '''
+    i=0    
+     
+    while i <= len(listaFechaRespuesta):
+        print(i)
+        if "datetime" in type(listaFechaRespuesta[i]).__name__:
+            listaFechaRespuesta.pop(i)
+            
+        else:
+            listaFechaRespuesta[i].pop(0)
+                
+            
+        i=i+1
+    '''
+        
+    for a in listaFechaRespuesta:
+        indice = 0
+        if "datetime" in type(listaFechaRespuesta[indice]).__name__:
+            listaFechaRespuesta[indice] = []
+        else:
+            a.pop(0)
+        indice=indice+1   
+    print(listaFechaRespuesta)
+              
+           
+        
    
 print(obtenerDatos())
