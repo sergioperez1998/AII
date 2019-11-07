@@ -113,10 +113,10 @@ def obtenerDatos():
                 listaContenidoRespuesta.append(listaAutoresRespuesta)
         i=i+1
         
-        print(listaContenidoRespuesta)
+        #print(listaContenidoRespuesta)
         
         '''
-        En listaContenidoPublicacion = [[TITULO],[ENLACE],[NOMBRE],[FECHA],[Nº RESPUESTAS],[Nº VISITAS]]
+        En listaContenidoPublicacion = [[TITULO],[ENLACE],[NOMBRE],[FECHA],[NUMERO RESPUESTAS],[NUMERO VISITAS]]
         En listaContenidoRespuesta = [[ENLACE],[FECHA],[TEXTO],[AUTOR]]
         '''
         return listaContenidoPublicacion, listaContenidoRespuesta
