@@ -23,6 +23,7 @@ def obtenerDatos():
     webContent = response.read()
     soup = BeautifulSoup(webContent, 'html.parser')
     
+    listaContenidoPublicacion=[]
     listadoTitulosTema=[]
     listadoEnlacesTema=[]
     listadoNombresTema=[]
@@ -55,21 +56,33 @@ def obtenerDatos():
                     listadoRespuestasTema.append("Respuestas: "+contenido.a.string)
                 if "Visitas: " in contenido.get_text():
                     listadoVisitasTema.append(contenido.get_text())
-                    
-    for enlace in listadoEnlacesTema:
     
+    listaContenidoPublicacion.append(listadoTitulosTema)
+    listaContenidoPublicacion.append(listadoEnlacesTema)
+    listaContenidoPublicacion.append(listadoNombresTema)
+    listaContenidoPublicacion.append(listadoFechasTema)
+    listaContenidoPublicacion.append(listadoRespuestasTema)
+    listaContenidoPublicacion.append(listadoVisitasTema)
+                    
+    i=0
+    for enlace in listadoEnlacesTema:
+        
         s = re.sub(r"([^n\u0300-\u036f]|n(?!\u0303(?![\u0300-\u036f])))[\u0300-\u036f]+", r"\1", 
         normalize("NFD", enlace), 0, re.I)
    
         s = normalize('NFC', s)
-        #print(s)
         response = urllib2.urlopen(s)
         webContent = response.read()
         soup2 = BeautifulSoup(webContent, 'html.parser')
         
+        listaContenidoRespuesta=[]
+        listaContenidoRespuesta.append(enlace)
         listaFechaRespuesta=[]
+        listaTextoRespuesta=[]
+        listaAutoresRespuesta=[]
         
         for date in soup2.findAll("span", attrs={"class":"date"}):
+            
             a=(date.get_text().split(","))
             fechas = a[0] + a[1]
             
@@ -79,43 +92,32 @@ def obtenerDatos():
                 fechaDeAyer = str(ayer.day)+"/"+str(ayer.month)+'/'+str(ayer.year)+' '+fechas.strip("Ayer ")
                 
                 fechasCasting= datetime.datetime.strptime(fechaDeAyer, '%d/%m/%Y %H:%M')
-                listaFechaRespuesta.append(fechasCasting)
+                if i >0 :
+                    listaFechaRespuesta.append(fechasCasting)
+                    listaContenidoRespuesta.append(listaFechaRespuesta)
             else:
-                fechasCasting= datetime.datetime.strptime(fechas, '%d/%m/%Y %H:%M')
-                listaFechaRespuesta.append(fechasCasting)
-                
-            
-        
-        print(listaFechaRespuesta)    
-        #No funciona  bien el codigo apartir de aqui 
-        #Funcionalidad deseada: eliminar de la listaFechaRespuesta todas las fechas que nos sean de respuestas
-        #es decir, la primera fecha de cada lista, dentro de la lista listaFechaRespuesta.
-        #Observacion:Hay elementos en la lista listaFechaRepuesta que no  son listas sino datetime.datetime
-    '''
-    i=0    
-     
-    while i <= len(listaFechaRespuesta):
-        print(i)
-        if "datetime" in type(listaFechaRespuesta[i]).__name__:
-            listaFechaRespuesta.pop(i)
-            
-        else:
-            listaFechaRespuesta[i].pop(0)
-                
-            
+                if i>0:
+                    fechasCasting= datetime.datetime.strptime(fechas, '%d/%m/%Y %H:%M')
+                    listaFechaRespuesta.append(fechasCasting)
+                    listaContenidoRespuesta.append(listaFechaRespuesta)
+                    
+        for content in soup2.findAll("blockquote",attrs={"class":"postcontent restore"}):
+            for textoplano in content.stripped_strings:
+                if i>0:
+                    listaTextoRespuesta.append(repr(textoplano))
+                    listaContenidoRespuesta.append(listaTextoRespuesta)
+                 
+        for tituloActorRespuesta in soup2.findAll("a",attrs={"class":"username offline popupctrl"}):
+            if i>0:
+                listaAutoresRespuesta.append(tituloActorRespuesta.strong.string)
+                listaContenidoRespuesta.append(listaAutoresRespuesta)
         i=i+1
-    '''
         
-    for a in listaFechaRespuesta:
-        indice = 0
-        if "datetime" in type(listaFechaRespuesta[indice]).__name__:
-            listaFechaRespuesta[indice] = []
-        else:
-            a.pop(0)
-        indice=indice+1   
-    print(listaFechaRespuesta)
-              
-           
+        print(listaContenidoRespuesta)
         
-   
+        '''
+        En listaContenidoPublicacion = [[TITULO],[ENLACE],[NOMBRE],[FECHA],[Nº RESPUESTAS],[Nº VISITAS]]
+        En listaContenidoRespuesta = [[ENLACE],[FECHA],[TEXTO],[AUTOR]]
+        '''
+        return listaContenidoPublicacion, listaContenidoRespuesta
 print(obtenerDatos())
