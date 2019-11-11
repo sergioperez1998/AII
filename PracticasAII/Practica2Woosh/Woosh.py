@@ -50,9 +50,15 @@ def obtenerDatos(url):
         listaFechas.append(fechasCasting)
     for descripciones in soup.findAll("div",attrs={"class":"meta-body"}):
         listaDescripciones.append(descripciones.string)
-        
+    
+    i = 0
+    while i < len(listaDescripciones):
+        if listaDescripciones[i] == None:
+            listaDescripciones[i] == "None"
+    
     return listaCategoria, listaTitulos, listaEnlaces, listaFechas ,listaDescripciones
 
+<<<<<<< HEAD
 def ventanaPrincipal():
     top = Tk()
 
@@ -160,3 +166,33 @@ def ventanaDescripcion():
         
 if __name__ == "__main__":
     ventanaPrincipal()
+=======
+def escrituraFichero():
+    
+    datos = llamadaObtencionDatos()
+    
+    Categorias= datos[0]
+    Titulos=datos[1]
+    Enlaces=datos[2]
+    Fechas=datos[3]
+    Descripciones=datos[4]
+    
+    contadorLinea=0
+    while contadorLinea < len(Categorias):
+        
+        archivo = open("C:\\Users\\sergi\\Desktop\\Txts\\"+str(contadorLinea+1)+".txt","w")
+    
+        archivo.write(Titulos[contadorLinea]+ "\n")
+        archivo.write(Categorias[contadorLinea]+"\n")
+        archivo.write(Enlaces[contadorLinea]+"\n")
+        convertirdorFecha=(str(Fechas[contadorLinea]))
+        archivo.write(convertirdorFecha+"\n")
+        convertidorDescripciones= str(Descripciones[contadorLinea])
+        archivo.write(convertidorDescripciones)
+    
+        contadorLinea=contadorLinea+1
+        archivo.close()
+
+
+escrituraFichero()     
+>>>>>>> 41c805ee61b0fd9553da7f9ca1b6e995887ab660
