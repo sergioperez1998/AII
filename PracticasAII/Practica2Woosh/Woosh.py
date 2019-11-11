@@ -1,6 +1,5 @@
-encoding = "utf-8"
 from bs4 import BeautifulSoup
-import urllib.request as urllib2
+import urllib.request
 import datetime
 from tkinter import *
 from tkinter import messagebox
@@ -10,6 +9,13 @@ from whoosh.index import create_in,open_dir
 from whoosh.fields import Schema, TEXT, DATETIME, ID
 from whoosh.qparser import QueryParser, MultifieldParser
 from whoosh import qparser
+from whoosh.fields import Schema, TEXT, KEYWORD, ID, STORED
+from whoosh.analysis import StemmingAnalyzer
+import os, os.path
+from whoosh import index,fields
+import errno
+
+
 
 def llamadaObtencionDatos():
     
@@ -33,9 +39,9 @@ def llamadaObtencionDatos():
 def obtenerDatos(url):
     
     urlBasica="http://www.sensacine.com/"
-    response = urllib2.urlopen(url)
-    webContent = response.read()
-    soup = BeautifulSoup(webContent, 'html.parser')
+    response = urllib.request.urlopen(url)
+    
+    soup = BeautifulSoup(response.read().decode("latin-1"), 'lxml')
     
     listaCategoria=[]
     listaTitulos=[]
@@ -46,29 +52,23 @@ def obtenerDatos(url):
     
     for categorias in soup.findAll("div",attrs={"class":"meta-category"}):
         listaCategoria.append(categorias.string.split("-")[1].strip(" "))
-    for titulos in soup.findAll("a",attrs={"class":"meta-title-link"}):
-        listaTitulos.append(titulos.string.strip())
-        listaEnlaces.append(urlBasica+titulos.get("href"))
-    for fechas in soup.findAll("div",attrs={"class":"meta-date"}):
-        fechaSinCasting=fechas.string.split(" ")[1]+ "/" + meses[fechas.string.split(" ")[3]] + "/" + fechas.string.split(" ")[5]
-        fechasCasting= datetime.datetime.strptime(fechaSinCasting, '%d/%m/%Y')
-        listaFechas.append(fechasCasting)
-    for descripciones in soup.findAll("div",attrs={"class":"meta-body"}):
-        listaDescripciones.append(descripciones.string)
-    
-    i = 0
-    while i < len(listaDescripciones):
-        if listaDescripciones[i] == None:
-            listaDescripciones[i] == "None"
-    
+        for titulos in soup.findAll("a",attrs={"class":"meta-title-link"}):
+            listaTitulos.append(titulos.string.strip())
+            listaEnlaces.append(urlBasica+titulos.get("href"))
+        for fechas in soup.findAll("div",attrs={"class":"meta-date"}):
+            fechaSinCasting=fechas.string.split(" ")[1]+ "/" + meses[fechas.string.split(" ")[3]] + "/" + fechas.string.split(" ")[5]
+            fechasCasting= datetime.datetime.strptime(fechaSinCasting, '%d/%m/%Y')
+            listaFechas.append(fechasCasting)
+        for descripciones in soup.findAll("div",attrs={"class":"meta-body"}):
+            listaDescripciones.append(descripciones.string)
+        
     return listaCategoria, listaTitulos, listaEnlaces, listaFechas ,listaDescripciones
-
 
 
 def ventanaDatos():
     top = Tk()
 
-    cargarDatos = Button(top, text="Cargar", command = escrituraFichero)
+    cargarDatos = Button(top, text="Cargar", command = crearTxt)
     cargarDatos.pack(side = LEFT)
 
     salir = Button(top, text= "Salir", command = quit)
@@ -159,36 +159,33 @@ def ventanaDescripcion():
 
     top.mainloop()
         
-
-
-def escrituraFichero():
     
-    datos = llamadaObtencionDatos()
+def crearTxt():
     
-    Categorias= datos[0]
-    Titulos=datos[1]
-    Enlaces=datos[2]
-    Fechas=datos[3]
-    Descripciones=datos[4]
+    lista = llamadaObtencionDatos()
     
-    contadorLinea=0
-    while contadorLinea < len(Categorias):
+    try:
+        os.mkdir('Documentos')
+    except OSError as e:
+        if e.errno != errno.EEXIST:
+            raise
         
-        archivo = open("C:\\Users\\sergi\\Desktop\\Txts\\"+str(contadorLinea+1)+".txt","w")
-    
-        archivo.write(Titulos[contadorLinea]+ "\n")
-        archivo.write(Categorias[contadorLinea]+"\n")
-        archivo.write(Enlaces[contadorLinea]+"\n")
-        convertirdorFecha=(str(Fechas[contadorLinea]))
-        archivo.write(convertirdorFecha+"\n")
-        convertidorDescripciones= str(Descripciones[contadorLinea])
-        archivo.write(convertidorDescripciones)
-    
-        contadorLinea=contadorLinea+1
-        archivo.close()
+    for i in range(0,len(lista[0])):
 
-
-escrituraFichero()     
+        file_object = open("Documentos\\Archivo"+str(i)+".txt","w")
+        
+        file_object.write(str(lista[1][i]))
+        file_object.write("\n")
+        file_object.write(str(lista[0][i]))
+        file_object.write("\n")
+        file_object.write(str(lista[2][i]))
+        file_object.write("\n")
+        file_object.write(str(lista[3][i]))
+        file_object.write("\n")
+        a = lista[4][i]
+        b = str(a)
+        file_object.write(b)
+   
 
         
 def apartado_a(dirdocs,dirindex):
@@ -265,4 +262,5 @@ def ventanaPrincipal():
 
 if __name__ == '__main__':
     ventana_principal() 
+
 
