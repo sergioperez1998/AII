@@ -52,4 +52,105 @@ def obtenerDatos(url):
         listaDescripciones.append(descripciones.string)
         
     return listaCategoria, listaTitulos, listaEnlaces, listaFechas ,listaDescripciones
+
+def ventanaPrincipal():
+    top = Tk()
+
+    almacenarDatos = Button(top, text="Datos", command = ventanaDatos)
+    almacenarDatos.pack(side = LEFT)
+
+    buscarOfertas = Button(top, text="Buscar", command = ventanaBuscar)
+    buscarOfertas.pack(side = RIGHT)
+
+    top.mainloop()2
+
+def ventanaDatos():
+    top = Tk()
+
+    cargarDatos = Button(top, text="Cargar", command = escrituraFichero)
+    cargarDatos.pack(side = LEFT)
+
+    salir = Button(top, text= "Salir", command = quit)
+    salir.pack(side = RIGHT)
+
+    top.mainloop()
+
+def ventanaBuscar():
+    top = Tk()
+
+    tituloYDescripcion = Button(top, text="Titulo y Descripcion", command = ventanaTituloYDescripcion)
+    tituloYDescripcion.pack(side = LEFT)
+
+    fecha = Button(top, text="Fecha", command = ventanaFecha)
+    fecha.pack(side = LEFT)
+
+    descripcion = Button(top, text="Descripcion", command = ventanaDescripcion)
+    descripcion.pack(side = RIGHT)
+
+    top.mainloop()
+
+def ventanaTituloYDescripcion():
+    def buscarNoticias(event):
+        v = Toplevel()
+        sc = Scrollbar(v)
+        sc.pack(side=RIGHT, fill=Y)
+        lb = Listbox(v, width=150, yscrollcommand=sc.set)
+        lb.pack(side = LEFT, fill = BOTH)
+        sc.config(command = lb.yview)
+
+        s = entry.get()
         
+    top = Tk()
+
+    L1 = Label(top, text="Introduzca una o varias palabras:")
+    L1.pack(side=LEFT)
+    entry = Entry(top, bd = 5)
+    entry.bind("<Return>", buscarNoticias)
+    entry.pack(side = RIGHT)
+
+    top.mainloop()
+
+def ventanaFecha():
+    def buscarNoticias(event):
+        v = Toplevel()
+        sc = Scrollbar(v)
+        sc.pack(side=RIGHT, fill=Y)
+        lb = Listbox(v, width=150, yscrollcommand=sc.set)
+        lb.pack(side = LEFT, fill = BOTH)
+        sc.config(command = lb.yview)
+
+        s = entry.get()
+        
+    top = Tk()
+
+    L1 = Label(top, text="Introduzca un rango de fechas:")
+    L1.pack(side=LEFT)
+    entry = Entry(top, bd = 5)
+    entry.bind("<Return>", buscarNoticias)
+    entry.pack(side = RIGHT)
+
+    top.mainloop()
+
+def ventanaDescripcion():
+    def buscarNoticias(event):
+        v = Toplevel()
+        sc = Scrollbar(v)
+        sc.pack(side=RIGHT, fill=Y)
+        lb = Listbox(v, width=150, yscrollcommand=sc.set)
+        lb.pack(side = LEFT, fill = BOTH)
+        sc.config(command = lb.yview)
+
+        s = entry.get()
+        
+    top = Tk()
+
+    L1 = Label(top, text="Introduzca una frase:")
+    L1.pack(side=LEFT)
+    entry = Entry(top, bd = 5)
+    entry.bind("<Return>", buscarNoticias)
+    entry.pack(side = RIGHT)
+
+    top.mainloop()
+        
+if __name__ == "__main__":
+    ventanaPrincipal()
