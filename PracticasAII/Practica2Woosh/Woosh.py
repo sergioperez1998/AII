@@ -4,7 +4,12 @@ import urllib.request as urllib2
 import datetime
 from tkinter import *
 from tkinter import messagebox
-
+import os
+from datetime import datetime
+from whoosh.index import create_in,open_dir
+from whoosh.fields import Schema, TEXT, DATETIME, ID
+from whoosh.qparser import QueryParser, MultifieldParser
+from whoosh import qparser
 
 def llamadaObtencionDatos():
     
@@ -58,17 +63,7 @@ def obtenerDatos(url):
     
     return listaCategoria, listaTitulos, listaEnlaces, listaFechas ,listaDescripciones
 
-<<<<<<< HEAD
-def ventanaPrincipal():
-    top = Tk()
 
-    almacenarDatos = Button(top, text="Datos", command = ventanaDatos)
-    almacenarDatos.pack(side = LEFT)
-
-    buscarOfertas = Button(top, text="Buscar", command = ventanaBuscar)
-    buscarOfertas.pack(side = RIGHT)
-
-    top.mainloop()2
 
 def ventanaDatos():
     top = Tk()
@@ -164,9 +159,8 @@ def ventanaDescripcion():
 
     top.mainloop()
         
-if __name__ == "__main__":
-    ventanaPrincipal()
-=======
+
+
 def escrituraFichero():
     
     datos = llamadaObtencionDatos()
@@ -195,4 +189,80 @@ def escrituraFichero():
 
 
 escrituraFichero()     
->>>>>>> 41c805ee61b0fd9553da7f9ca1b6e995887ab660
+
+        
+def apartado_a(dirdocs,dirindex):
+    if not os.path.exists(dirdocs):
+        print ("Error: no existe el directorio de documentos " + dirdocs)
+    else:
+        if not os.path.exists(dirindex):
+            os.mkdir(dirindex)
+
+    ix = create_in(dirindex, schema=get_schema())
+    writer = ix.writer()
+    i=0
+    for docname in os.listdir(dirdocs):
+        if not os.path.isdir(dirdocs+docname):
+            add_doc(writer, dirdocs, docname)
+            i+=1
+    messagebox.showinfo("Fin de indexado", "Se han indexado "+str(i)+ " correos")
+            
+    writer.commit() 
+
+  
+def apartado_b(dirindex):
+    query = input("Introduzca palabras titulo o descripcion: ")
+    ix=open_dir(dirindex)   
+
+    with ix.searcher() as searcher:
+        query = QueryParser("titulo", ix.schema,group=qparser.OrGroup).parse(query)
+        results = searcher.search(query)
+        for r in results:
+            print ("FICHERO: "+r['nombrefichero'])
+          
+def get_schema():
+    return Schema(titulo=TEXT(stored=True), categoria=TEXT(stored=True), enlace=TEXT(stored=True),fecha=DATETIME(stored=True), descripcion=TEXT(stored=True),nombrefichero=ID(stored=True) )
+
+
+def add_doc(writer, path, docname):
+    try:    
+        fileobj=open(path+'\\'+docname, "r")
+        tit=fileobj.readline().strip()
+        cate=fileobj.readline().strip()
+        enl=fileobj.readline().strip()
+        f=fileobj.readline().strip()
+        fe=datetime.strptime(f,'%Y%m%d')
+        descrip=fileobj.read()
+        fileobj.close()           
+        
+        writer.add_document(titulo=tit, categoria=cate, enlace=enl, fecha=fe, descripcion=descrip,nombrefichero=docname)
+          
+        print("Creado indice para fichero " + docname)
+    except:
+        print ("Error: No se ha podido añadir el documento "+path+'\\'+docname)
+        
+        
+    
+def ventana_principal():
+    dirdocs="Txts"
+    dirindex="Index"
+    top = Tk()
+    indexar = Button(top, text="Indexar", command = lambda: apartado_a(dirdocs,dirindex))
+    indexar.pack(side = TOP)
+    Buscar = Button(top, text="Buscar por Rtte", command = lambda: apartado_b(dirindex))
+    Buscar.pack(side = TOP)
+    top.mainloop()
+def ventanaPrincipal():
+    top = Tk()
+
+    almacenarDatos = Button(top, text="Datos", command = ventanaDatos)
+    almacenarDatos.pack(side = LEFT)
+
+    buscarOfertas = Button(top, text="Buscar", command = ventanaBuscar)
+    buscarOfertas.pack(side = RIGHT)
+
+    top.mainloop()
+
+if __name__ == '__main__':
+    ventana_principal() 
+
