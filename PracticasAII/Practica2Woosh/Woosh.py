@@ -111,7 +111,7 @@ def ventanaTituloYDescripcion():
     top.mainloop()
 
 def ventanaFecha():
-    def buscarNoticias(event):
+    def buscarNoticiasFecha():
         v = Toplevel()
         sc = Scrollbar(v)
         sc.pack(side=RIGHT, fill=Y)
@@ -119,15 +119,21 @@ def ventanaFecha():
         lb.pack(side = LEFT, fill = BOTH)
         sc.config(command = lb.yview)
 
-        s = entry.get()
+        s1 = entry1.get()
+        s2 = entry2.get()
         
     top = Tk()
 
-    L1 = Label(top, text="Introduzca un rango de fechas:")
+    L1 = Label(top, text="Introduzca un rango de fechas en formato DD/MM/AAAA:")
+    L2 = Label(top, text="-")
     L1.pack(side=LEFT)
-    entry = Entry(top, bd = 5)
-    entry.bind("<Return>", buscarNoticias)
-    entry.pack(side = RIGHT)
+    entry1 = Entry(top, bd = 5)
+    entry2 = Entry(top, bd = 5)
+    button = Button(top, text = "Buscar", command = buscarNoticiasFecha)
+    entry1.pack(side = LEFT)
+    L2.pack(side = LEFT)
+    entry2.pack(side = RIGHT)
+    button.pack(side = RIGHT)
 
     top.mainloop()
 
