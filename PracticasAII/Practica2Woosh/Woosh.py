@@ -41,15 +41,15 @@ def obtenerDatos(url):
     
     for categorias in soup.findAll("div",attrs={"class":"meta-category"}):
         listaCategoria.append(categorias.string.split("-")[1].strip(" "))
-    for titulos in soup.findAll("a",attrs={"class":"meta-title-link"}):
-        listaTitulos.append(titulos.string.strip())
-        listaEnlaces.append(urlBasica+titulos.get("href"))
-    for fechas in soup.findAll("div",attrs={"class":"meta-date"}):
-        fechaSinCasting=fechas.string.split(" ")[1]+ "/" + meses[fechas.string.split(" ")[3]] + "/" + fechas.string.split(" ")[5]
-        fechasCasting= datetime.datetime.strptime(fechaSinCasting, '%d/%m/%Y')
-        listaFechas.append(fechasCasting)
-    for descripciones in soup.findAll("div",attrs={"class":"meta-body"}):
-        listaDescripciones.append(descripciones.string)
+        for titulos in soup.findAll("a",attrs={"class":"meta-title-link"}):
+            listaTitulos.append(titulos.string.strip())
+            listaEnlaces.append(urlBasica+titulos.get("href"))
+        for fechas in soup.findAll("div",attrs={"class":"meta-date"}):
+            fechaSinCasting=fechas.string.split(" ")[1]+ "/" + meses[fechas.string.split(" ")[3]] + "/" + fechas.string.split(" ")[5]
+            fechasCasting= datetime.datetime.strptime(fechaSinCasting, '%d/%m/%Y')
+            listaFechas.append(fechasCasting)
+        for descripciones in soup.findAll("div",attrs={"class":"meta-body"}):
+            listaDescripciones.append(descripciones.string)
     
     i = 0
     while i < len(listaDescripciones):
@@ -83,6 +83,5 @@ def escrituraFichero():
     
         contadorLinea=contadorLinea+1
         archivo.close()
-
-
-escrituraFichero()     
+        
+llamadaObtencionDatos()
