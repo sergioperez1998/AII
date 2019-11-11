@@ -1,9 +1,15 @@
-encoding = "utf-8"
 from bs4 import BeautifulSoup
-import urllib.request as urllib2
+import urllib.request
 import datetime
 from tkinter import *
 from tkinter import messagebox
+from whoosh.fields import Schema, TEXT, KEYWORD, ID, STORED
+from whoosh.analysis import StemmingAnalyzer
+import os, os.path
+from whoosh import index,fields
+import errno
+
+
 
 
 def llamadaObtencionDatos():
@@ -28,9 +34,9 @@ def llamadaObtencionDatos():
 def obtenerDatos(url):
     
     urlBasica="http://www.sensacine.com/"
-    response = urllib2.urlopen(url)
-    webContent = response.read()
-    soup = BeautifulSoup(webContent, 'html.parser')
+    response = urllib.request.urlopen(url)
+    
+    soup = BeautifulSoup(response.read().decode("latin-1"), 'lxml')
     
     listaCategoria=[]
     listaTitulos=[]
@@ -50,38 +56,33 @@ def obtenerDatos(url):
             listaFechas.append(fechasCasting)
         for descripciones in soup.findAll("div",attrs={"class":"meta-body"}):
             listaDescripciones.append(descripciones.string)
-    
-    i = 0
-    while i < len(listaDescripciones):
-        if listaDescripciones[i] == None:
-            listaDescripciones[i] == "None"
-    
+        
     return listaCategoria, listaTitulos, listaEnlaces, listaFechas ,listaDescripciones
 
-def escrituraFichero():
+def crearTxt():
     
-    datos = llamadaObtencionDatos()
+    lista = llamadaObtencionDatos()
     
-    Categorias= datos[0]
-    Titulos=datos[1]
-    Enlaces=datos[2]
-    Fechas=datos[3]
-    Descripciones=datos[4]
-    
-    contadorLinea=0
-    while contadorLinea < len(Categorias):
+    try:
+        os.mkdir('Documentos')
+    except OSError as e:
+        if e.errno != errno.EEXIST:
+            raise
         
-        archivo = open("C:\\Users\\sergi\\Desktop\\Txts\\"+str(contadorLinea+1)+".txt","w")
-    
-        archivo.write(Titulos[contadorLinea]+ "\n")
-        archivo.write(Categorias[contadorLinea]+"\n")
-        archivo.write(Enlaces[contadorLinea]+"\n")
-        convertirdorFecha=(str(Fechas[contadorLinea]))
-        archivo.write(convertirdorFecha+"\n")
-        convertidorDescripciones= str(Descripciones[contadorLinea])
-        archivo.write(convertidorDescripciones)
-    
-        contadorLinea=contadorLinea+1
-        archivo.close()
+    for i in range(0,len(lista[0])):
+
+        file_object = open("Documentos\\Archivo"+str(i)+".txt","w")
         
-llamadaObtencionDatos()
+        file_object.write(str(lista[1][i]))
+        file_object.write("\n")
+        file_object.write(str(lista[0][i]))
+        file_object.write("\n")
+        file_object.write(str(lista[2][i]))
+        file_object.write("\n")
+        file_object.write(str(lista[3][i]))
+        file_object.write("\n")
+        a = lista[4][i]
+        b = str(a)
+        file_object.write(b)
+
+crearTxt()
