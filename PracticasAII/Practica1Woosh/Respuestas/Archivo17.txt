@@ -1,4 +1,0 @@
-https://foros.derecho.com/tema/81188-Obras-en-propiedad-arrendada?s=38223e0ae9f28567bbc4071a7531012f
-[datetime.datetime(2019, 5, 16, 10, 59)]
-[None]
-['minion89']

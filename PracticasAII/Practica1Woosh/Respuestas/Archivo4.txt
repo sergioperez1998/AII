@@ -1,4 +1,0 @@
-https://foros.derecho.com/tema/93867-Devolución-fianza?s=38223e0ae9f28567bbc4071a7531012f
-[datetime.datetime(2019, 10, 23, 16, 6)]
-[None]
-['David2020']

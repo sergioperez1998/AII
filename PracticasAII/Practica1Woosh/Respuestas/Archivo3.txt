@@ -1,4 +1,0 @@
-https://foros.derecho.com/tema/45181-Se-precisa-abogado-en-barcelona?s=38223e0ae9f28567bbc4071a7531012f
-[datetime.datetime(2010, 6, 4, 16, 53), datetime.datetime(2010, 6, 5, 16, 31), datetime.datetime(2010, 6, 5, 19, 5), datetime.datetime(2010, 6, 5, 20, 34), datetime.datetime(2010, 6, 6, 11, 7), datetime.datetime(2010, 6, 7, 12, 22), datetime.datetime(2010, 6, 7, 19, 41), datetime.datetime(2010, 6, 7, 19, 44), datetime.datetime(2010, 6, 7, 23, 22)]
-[None, 'Tenia entendido que no se podia cobrar comision como abogado', None, 'Gracias por la aclaracion, buenas tardes', None, None, None, None, None]
-['sigo siendo txipiron', 'pachon', 'sigo siendo txipiron', 'pachon', 'sigo siendo txipiron', 'sigo siendo txipiron', 'sigo siendo txipiron', 'sigo siendo txipiron', 'sigo siendo txipiron']

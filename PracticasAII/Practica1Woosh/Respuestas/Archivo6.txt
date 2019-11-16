@@ -1,4 +1,0 @@
-https://foros.derecho.com/tema/80587-Puedo-tomar-medidas?s=38223e0ae9f28567bbc4071a7531012f
-[datetime.datetime(2019, 3, 12, 12, 26), datetime.datetime(2019, 6, 5, 9, 45), datetime.datetime(2019, 8, 14, 9, 17)]
-[None, None, 'Es un asunto delicado, pero ojo porque gritar no tiene por qué resolver el asunto, si no que podría agravarlo. ¿Has intentado hablar con ellos de manera tranquila? ¿son gente con quienes se puede hablar?']
-['Mario67', 'minion89', 'DuranyDuran']

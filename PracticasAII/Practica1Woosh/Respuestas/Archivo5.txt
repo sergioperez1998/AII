@@ -1,4 +1,0 @@
-https://foros.derecho.com/tema/88889-Problemas-en-la-Escalera?s=38223e0ae9f28567bbc4071a7531012f
-[datetime.datetime(2019, 8, 29, 6, 54)]
-[None]
-['sviter']

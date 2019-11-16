@@ -1,4 +1,0 @@
-https://foros.derecho.com/tema/80436-licencia-de-actividad?s=38223e0ae9f28567bbc4071a7531012f
-[datetime.datetime(2019, 3, 16, 0, 11), datetime.datetime(2019, 6, 5, 10, 1), datetime.datetime(2019, 11, 11, 19, 47)]
-[None, None, 'It absolutely not agree']
-['Henryreisp', 'minion89', 'Alikguelo']
