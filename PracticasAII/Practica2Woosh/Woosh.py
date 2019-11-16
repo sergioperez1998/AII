@@ -1,19 +1,15 @@
+encoding = "utf-8"
 from bs4 import BeautifulSoup
 import urllib.request
 import datetime
 from tkinter import *
 from tkinter import messagebox
-import os
-from datetime import datetime
-from whoosh.index import create_in,open_dir
-from whoosh.fields import Schema, TEXT, DATETIME, ID
-from whoosh.qparser import QueryParser, MultifieldParser
-from whoosh import qparser
 from whoosh.fields import Schema, TEXT, KEYWORD, ID, STORED
 from whoosh.analysis import StemmingAnalyzer
 import os, os.path
 from whoosh import index,fields
 import errno
+
 
 
 
@@ -70,7 +66,7 @@ def ventanaDatos():
     dirindex="Index"
     top = Tk()
 
-    cargarDatos = Button(top, text="Cargar", command = lambda: apartado_a(dirdocs,dirindex))
+    cargarDatos = Button(top, text="Cargar", command = lambda: (dirdocs,dirindex))
     cargarDatos.pack(side = LEFT)
 
     salir = Button(top, text= "Salir", command = quit)
@@ -161,7 +157,6 @@ def ventanaDescripcion():
 
     top.mainloop()
         
-    
 def crearTxt():
     
     lista = llamadaObtencionDatos()
@@ -171,14 +166,13 @@ def crearTxt():
     except OSError as e:
         if e.errno != errno.EEXIST:
             raise
-        
+    
     for i in range(0,len(lista[0])):
 
-        file_object = open("Documentos\\Archivo"+str(i)+".txt","w")
-        
-        file_object.write(str(lista[1][i]))
-        file_object.write("\n")
+        file_object = open("Documentos\\Archivo"+str(i+1)+".txt","w",encoding="utf-8")
         file_object.write(str(lista[0][i]))
+        file_object.write("\n")
+        file_object.write(str(lista[1][i]))
         file_object.write("\n")
         file_object.write(str(lista[2][i]))
         file_object.write("\n")
@@ -186,61 +180,7 @@ def crearTxt():
         file_object.write("\n")
         a = lista[4][i]
         b = str(a)
-        file_object.write(b)
-   
-
-        
-def apartado_a(dirdocs,dirindex):
-    if not os.path.exists(dirdocs):
-        print ("Error: no existe el directorio de documentos " + dirdocs)
-    else:
-        if not os.path.exists(dirindex):
-            os.mkdir(dirindex)
-
-    ix = create_in(dirindex, schema=get_schema())
-    writer = ix.writer()
-    i=0
-    for docname in os.listdir(dirdocs):
-        if not os.path.isdir(dirdocs+docname):
-            add_doc(writer, dirdocs, docname)
-            i+=1
-    messagebox.showinfo("Fin de indexado", "Se han indexado "+str(i)+ " correos")
-            
-    writer.commit() 
-
-  
-def apartado_b(dirindex):
-    query = input("Introduzca palabras titulo o descripcion: ")
-    ix=open_dir(dirindex)   
-
-    with ix.searcher() as searcher:
-        query = QueryParser("titulo", ix.schema,group=qparser.OrGroup).parse(query)
-        results = searcher.search(query)
-        for r in results:
-            print ("FICHERO: "+r['nombrefichero'])
-          
-def get_schema():
-    return Schema(titulo=TEXT(stored=True), categoria=TEXT(stored=True), enlace=TEXT(stored=True),fecha=DATETIME(stored=True), descripcion=TEXT(stored=True),nombrefichero=ID(stored=True) )
-
-
-def add_doc(writer, path, docname):
-    try:    
-        fileobj=open(path+'\\'+docname, "r")
-        tit=fileobj.readline().strip()
-        cate=fileobj.readline().strip()
-        enl=fileobj.readline().strip()
-        f=fileobj.readline().strip()
-        fe=datetime.strptime(f,'%Y%m%d')
-        descrip=fileobj.read()
-        fileobj.close()           
-        
-        writer.add_document(titulo=tit, categoria=cate, enlace=enl, fecha=fe, descripcion=descrip,nombrefichero=docname)
-          
-        print("Creado indice para fichero " + docname)
-    except:
-        print ("Error: No se ha podido anadir el documento "+path+'\\'+docname)
-        
-        
+        file_object.write(b)        
     
 def ventana_principal():
     top = Tk()
@@ -254,3 +194,4 @@ if __name__ == '__main__':
     ventana_principal() 
 
 
+crearTxt()
