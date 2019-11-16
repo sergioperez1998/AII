@@ -1,3 +1,4 @@
+encoding = "utf-8"
 from bs4 import BeautifulSoup
 import urllib.request
 import datetime
@@ -60,6 +61,7 @@ def obtenerDatos(url):
     return listaCategoria, listaTitulos, listaEnlaces, listaFechas ,listaDescripciones
 
 def crearTxt():
+    
     lista = llamadaObtencionDatos()
     
     try:
@@ -70,7 +72,7 @@ def crearTxt():
     
     for i in range(0,len(lista[0])):
 
-        file_object = open("Documentos\\Archivo"+str(i+1)+".txt","w")
+        file_object = open("Documentos\\Archivo"+str(i+1)+".txt","w",encoding="utf-8")
         file_object.write(str(lista[0][i]))
         file_object.write("\n")
         file_object.write(str(lista[1][i]))
