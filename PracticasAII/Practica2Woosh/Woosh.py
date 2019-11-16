@@ -66,9 +66,11 @@ def obtenerDatos(url):
 
 
 def ventanaDatos():
+    dirdocs="Txts"
+    dirindex="Index"
     top = Tk()
 
-    cargarDatos = Button(top, text="Cargar", command = crearTxt)
+    cargarDatos = Button(top, text="Cargar", command = lambda: apartado_a(dirdocs,dirindex))
     cargarDatos.pack(side = LEFT)
 
     salir = Button(top, text= "Salir", command = quit)
@@ -99,7 +101,7 @@ def ventanaTituloYDescripcion():
         lb.pack(side = LEFT, fill = BOTH)
         sc.config(command = lb.yview)
 
-        s = entry.get()
+        s = entry.get() #s es lo que escribe el usuario
         
     top = Tk()
 
@@ -121,7 +123,7 @@ def ventanaFecha():
         sc.config(command = lb.yview)
 
         s1 = entry1.get()
-        s2 = entry2.get()
+        s2 = entry2.get() #s1 y s2 son los valores de las fechas en formato DD/MM/AAAA
         
     top = Tk()
 
@@ -133,8 +135,8 @@ def ventanaFecha():
     button = Button(top, text = "Buscar", command = buscarNoticiasFecha)
     entry1.pack(side = LEFT)
     L2.pack(side = LEFT)
-    entry2.pack(side = RIGHT)
-    button.pack(side = RIGHT)
+    entry2.pack(side = LEFT)
+    button.pack(RIGHT)
 
     top.mainloop()
 
@@ -147,7 +149,7 @@ def ventanaDescripcion():
         lb.pack(side = LEFT, fill = BOTH)
         sc.config(command = lb.yview)
 
-        s = entry.get()
+        s = entry.get() #s es lo que escribe el usuario
         
     top = Tk()
 
@@ -236,28 +238,16 @@ def add_doc(writer, path, docname):
           
         print("Creado indice para fichero " + docname)
     except:
-        print ("Error: No se ha podido añadir el documento "+path+'\\'+docname)
+        print ("Error: No se ha podido anadir el documento "+path+'\\'+docname)
         
         
     
 def ventana_principal():
-    dirdocs="Txts"
-    dirindex="Index"
     top = Tk()
-    indexar = Button(top, text="Indexar", command = lambda: apartado_a(dirdocs,dirindex))
-    indexar.pack(side = TOP)
-    Buscar = Button(top, text="Buscar por Rtte", command = lambda: apartado_b(dirindex))
-    Buscar.pack(side = TOP)
-    top.mainloop()
-def ventanaPrincipal():
-    top = Tk()
-
-    almacenarDatos = Button(top, text="Datos", command = ventanaDatos)
-    almacenarDatos.pack(side = LEFT)
-
-    buscarOfertas = Button(top, text="Buscar", command = ventanaBuscar)
-    buscarOfertas.pack(side = RIGHT)
-
+    datos = Button(top, text="Datos", command = ventanaDatos)
+    datos.pack(side = LEFT)
+    buscar = Button(top, text="Buscar", command = ventanaBuscar)
+    buscar.pack(side = RIGHT)
     top.mainloop()
 
 if __name__ == '__main__':
