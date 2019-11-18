@@ -11,6 +11,13 @@ from whoosh import index,fields
 from unicodedata import normalize
 import errno
 
+def eliminadorDiacriticos(cadena):
+    
+    s = re.sub(r"([^n\u0300-\u036f]|n(?!\u0303(?![\u0300-\u036f])))[\u0300-\u036f]+", r"\1", 
+    normalize("NFD", cadena), 0, re.I)
+    s = normalize('NFC', s)
+    return s
+
 
 def llamadaObtencionDatos():
     
@@ -42,12 +49,18 @@ def obtenerDatos(url):
     listaTexto=[]
     
     for noticia in soup.findAll("a",attrs={"class":"text-darker"}):
-        listaTitulo.append(noticia.find("h2").string.strip())
+        tituloSinParsear=noticia.find("h2").string.strip()
+        tituloParseado= eliminadorDiacriticos(tituloSinParsear)
+        listaTitulo.append(tituloParseado)
         fechaSinParsear=(noticia.find("p").string.strip().split(" "))
         listaFecha.append(fechaSinParsear[0]+" "+fechaSinParsear[2])
-        listaEnlace.append(noticia.get("href"))
+        enlaceSinParsear=noticia.get("href")
+        enlaceParseado= eliminadorDiacriticos(enlaceSinParsear)
+        listaEnlace.append(enlaceParseado)
         for texto in noticia.findAll("p",attrs={"class":"newsItem__desc"}):
-            listaTexto.append(texto.string.strip())
+            textoSinParsear=texto.string.strip()
+            textoParseado= eliminadorDiacriticos(textoSinParsear)
+            listaTexto.append(textoParseado)
     
     return listaTitulo, listaFecha, listaEnlace, listaTexto
 
