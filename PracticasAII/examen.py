@@ -115,9 +115,15 @@ def apartado_b_c(dirindex):
     def mostrar_lista(event):
         ix=open_dir(dirindex)      
         with ix.searcher() as searcher:
-            query = QueryParser("descripcion", ix.schema ).parse(str(en.get())) 
-            results = searcher.search(query)
-            imprimir_b_c(results)
+            try:
+                fecha = str(en2.get())
+                titulo = str(en1.get()) 
+                mparser = MultifieldParser([fecha, titulo], schema=ix.schema)
+           
+                results = searcher.search(mparser)
+                imprimir_b_b(results)
+            except:
+                print ("Error: Formato de fecha incorrecto")
 
 
     v = Toplevel()
