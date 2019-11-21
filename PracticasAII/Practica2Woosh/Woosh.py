@@ -8,6 +8,7 @@ from whoosh.fields import Schema, TEXT, KEYWORD, ID, STORED
 from whoosh.analysis import StemmingAnalyzer
 import os, os.path
 from whoosh import index,fields
+from unicodedata import normalize
 import errno
 import os
 from whoosh.index import create_in,open_dir
@@ -16,7 +17,12 @@ from whoosh.qparser import QueryParser, MultifieldParser
 from whoosh import qparser
 from whoosh.qparser.dateparse import DateParserPlugin
 
-
+def eliminadorDiacriticos(cadena):
+    
+    s = re.sub(r"([^n\u0300-\u036f]|n(?!\u0303(?![\u0300-\u036f])))[\u0300-\u036f]+", r"\1", 
+    normalize("NFD", cadena), 0, re.I)
+    s = normalize('NFC', s)
+    return s
 
 
 def llamadaObtencionDatos():
@@ -55,13 +61,16 @@ def obtenerDatos(url):
     for categorias in soup.findAll("div",attrs={"class":"meta-category"}):
         listaCategoria.append(categorias.string.split("-")[1].strip(" "))
         for titulos in soup.findAll("a",attrs={"class":"meta-title-link"}):
-            listaTitulos.append(titulos.string.strip())
+            TituloSinParsear=titulos.string.strip()
+            TituloParseado = eliminadorDiacriticos(TituloSinParsear)
+            listaTitulos.append(TituloParseado)
             listaEnlaces.append(urlBasica+titulos.get("href"))
         for fechas in soup.findAll("div",attrs={"class":"meta-date"}):
             fechaSinCasting=fechas.string.split(" ")[1]+ "/" + meses[fechas.string.split(" ")[3]] + "/" + fechas.string.split(" ")[5]
             fechasCasting= datetime.datetime.strptime(fechaSinCasting, '%d/%m/%Y')
             listaFechas.append(fechasCasting)
         for descripciones in soup.findAll("div",attrs={"class":"meta-body"}):
+
             listaDescripciones.append(descripciones.string)
     
    
@@ -69,7 +78,10 @@ def obtenerDatos(url):
     return listaCategoria, listaTitulos, listaEnlaces, listaFechas ,listaDescripciones
 
 
+
 def crearTxt():
+    
+
     lista = llamadaObtencionDatos()
     
     try:
@@ -79,6 +91,7 @@ def crearTxt():
             raise
     
     for i in range(0,len(lista[0])):
+
 
         file_object = open("Documentos\\Archivo"+str(i+1)+".txt","w",encoding='utf-8')
         file_object.write(str(lista[0][i]))
@@ -300,6 +313,10 @@ def ventanaPrincipal():
     buscarOfertas.pack(side = RIGHT)
 
     top.mainloop()
+
+
+     
+
 
 
 if __name__ == '__main__':
