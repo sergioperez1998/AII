@@ -8,6 +8,7 @@ class Usuario(models.Model):
     usuario = models.OneToOneField(parent_link=User,on_delete=models.CASCADE, null=False)
     
     def __str__(self):
+
         return self.categoriaPreferida
     
 
@@ -18,5 +19,18 @@ class Director(models.Model):
     peliculasDirigidas=models.TextField(help_text='escribir peliculas separadas por comas ',null=False)
     usuario = models.OneToOneField(parent_link=User,on_delete=models.CASCADE, null=False)
     
+   
     def __str__(self):
-        return self.categoriaPreferida
+        return self.biografia
+
+    
+class Pelicula(models.Model):
+    titulo = models.CharField(max_length=100, unique=True, null=False)
+    año= models.IntegerField(null=False)
+    resumen = models.TextField(help_text='Redacta un resumen sobre la pelicula',null=False)
+    categoria = models.TextField(help_text='Seleccione una categoria',null=False)
+    director = models.ForeignKey(Director,on_delete=models.CASCADE,null=False)
+    
+    def __str__(self):
+        return self.titulo
+
