@@ -12,10 +12,13 @@ class Receta(models.Model):
     
     def __str__(self):
         return self.titulo
-
-class Comentario(models.Model):
-    texto = models.TextField(help_text='Tu comentario', verbose_name='Comentario')
-    receta = models.ForeignKey(Receta,on_delete=models.CASCADE)
+    
+class Pelicula(models.Model):
+    titulo = models.CharField(max_length=100, unique=True, null=False)
+    año= models.IntegerField(null=False)
+    resumen = models.TextField(help_text='Redacta un resumen sobre la pelicula',null=False)
+    categoria = models.TextField(help_text='Seleccione una categoria',null=False)
+    director = models.ForeignKey(User,on_delete=models.CASCADE,null=False)
     
     def __str__(self):
-        return self.texto
+        return self.titulo
