@@ -1,4 +1,4 @@
-"""recetario1 URL Configuration
+"""Peliculas URL Configuration
 
 
 """
