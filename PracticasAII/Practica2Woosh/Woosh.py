@@ -71,16 +71,27 @@ def obtenerDatos(url):
             listaFechas.append(fechasCasting)
         for descripciones in soup.findAll("div",attrs={"class":"meta-body"}):
 
+
             listaDescripciones.append(descripciones.string)
     
    
+        
+   
+
+
+            DescripcionSinParsear= descripciones.string
+            if "NoneType" in type(DescripcionSinParsear).__name__:
+                listaDescripciones.append(DescripcionSinParsear)
+            else:
+                DescripcionParseada = eliminadorDiacriticos(DescripcionSinParsear)
+                listaDescripciones.append(DescripcionParseada)
         
     return listaCategoria, listaTitulos, listaEnlaces, listaFechas ,listaDescripciones
 
 
 
 def crearTxt():
-    
+
 
     lista = llamadaObtencionDatos()
     
@@ -91,6 +102,20 @@ def crearTxt():
             raise
     
     for i in range(0,len(lista[0])):
+
+
+        file_object = open("Documentos\\Archivo"+str(i+1)+".txt","w",encoding="utf-8")
+        file_object.write(str(lista[0][i]))
+        file_object.write("\n")
+        file_object.write(str(lista[1][i]))
+        file_object.write("\n")
+        file_object.write(str(lista[2][i]))
+        file_object.write("\n")
+        file_object.write(str(lista[3][i]))
+        file_object.write("\n")
+        a = lista[4][i]
+        b = str(a)
+        file_object.write(b)
 
 
         file_object = open("Documentos\\Archivo"+str(i+1)+".txt","w",encoding='utf-8')
@@ -105,11 +130,6 @@ def crearTxt():
         a = lista[4][i]
         b = str(a)
         file_object.write(b)
-
-
-
-
-
         
 def apartado_a(dirdocs,dirindex):
     if not os.path.exists(dirdocs):
@@ -313,9 +333,6 @@ def ventanaPrincipal():
     buscarOfertas.pack(side = RIGHT)
 
     top.mainloop()
-
-
-     
 
 
 
