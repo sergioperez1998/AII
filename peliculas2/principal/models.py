@@ -18,7 +18,7 @@ class Usuario(models.Model):
     
 
 class Director(models.Model):
-    biografia=models.TextField(help_text='biogradia',null=False)
+    biografia=models.TextField(help_text='biografia',null=False)
     peliculasDirigidas=models.TextField(help_text='escribir peliculas separadas por comas ',null=False)
     usuario = models.OneToOneField(User,on_delete=models.CASCADE, null=False)
     
