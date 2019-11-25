@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang='es'>
+  <header>
+  	<nav>
+  		<ul>
+		<li><a href='/'>Inicio</a></li>
+			<li><a href='/usuarios'>Usuarios registrados</a></li>
+			<li><a href='/peliculas'>Peliculas</a></li>
+			<li><a href='/directores'>Directores</a></li>
+		</ul>
+	</nav>
+  </header>
+  <section>
+    <h1>Peliculas</h1>
+	<ul>
+		{% for dato in directores %}
+	  	<li>{{dato.username}} - <em>{{dato.director.peliculasDirigidas}}</em>
+		{% endfor %}
+	</ul>
+  </section>
+</html>
