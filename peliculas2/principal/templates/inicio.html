@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang='es'>
+  <header>
+  	<nav>
+  		<ul>
+			<li><a href='/'>Inicio</a></li>
+			<li><a href='/usuarios'>Usuarios registrados</a></li>
+			<li><a href='/peliculas'>Peliculas</a></li>
+			<li><a href='/directores'>Directores</a></li>
+		</ul>
+	</nav>
+  </header>
+  <section>
+    <h1>Usuarios</h1>
+    <p>Actualmente tenemos registrados:</p>
+	<ul>
+		{% for dato in usuarios %}
+	  	<li>{{dato.username}} - <em>{{dato.categoriaPreferida}}</em>
+		{% endfor %}
+	</ul>
+  </section>
+</html>
