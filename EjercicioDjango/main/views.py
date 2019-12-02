@@ -1,8 +1,8 @@
 #encoding:utf-8
-from main.models import Usuario, Ocupacion, Puntuacion, Pelicula, Categoria
-from main.forms import  UsuarioBusquedaForm, PeliculaBusquedaYearForm
+from main.models import Evento, Tipo, Lenguaje, Municipio
+from main.forms import  EventosBusquedaFechaForm, EventosBusquedaIdiomasForm
 from django.shortcuts import render
-from django.db.models import Avg
+from django.db.models import Avg,Count
 from django.http.response import HttpResponseRedirect, HttpResponse
 from django.conf import settings
 from datetime import datetime
@@ -25,40 +25,41 @@ def populateDatabase(request):
     return HttpResponseRedirect('/index.html')
 
 
-def mostrar_ocupaciones(request):
-    usuarios= Usuario.objects.all().order_by('ocupacion')
-    return render(request, 'ocupacion_usuarios.html',{'usuarios':usuarios, 'STATIC_URL':settings.STATIC_URL})
+def mostrar_eventos(request):
+    eventos= Evento.objects.all().order_by('municipio')
+    return render(request, 'eventos_municipio.html',{'eventos':eventos, 'STATIC_URL':settings.STATIC_URL})
 
 
-def mostrar_mejores_peliculas(request):  
-    peliculas = Pelicula.objects.annotate(avg_rating=Avg('puntuacion__puntuacion')).order_by('-avg_rating')[:5]
-    return render(request, 'mejores_peliculas.html', {'peliculas':peliculas, 'STATIC_URL':settings.STATIC_URL})
+def mostrar_mejores_eventos(request):  
+    eventos = Evento.objects.annotate(numeroTipo=Count('tipo')).order_by('-numeroTipo')[:2]
+    return render(request, 'eventos_frecuenes.html', {'eventos':eventos, 'STATIC_URL':settings.STATIC_URL})
+    
 
 
-def mostrar_peliculas_year(request):
-    formulario = PeliculaBusquedaYearForm()
-    peliculas = None
+def mostrar_eventos_fecha(request):
+    formulario = EventosBusquedaFechaForm()
+    eventos = None
     
     if request.method=='POST':
-        formulario = PeliculaBusquedaYearForm(request.POST)
+        formulario = EventosBusquedaFechaForm(request.POST)
         
         if formulario.is_valid():
-            peliculas = Pelicula.objects.filter(fechaEstreno__year=formulario.cleaned_data['year'])
+            eventos = Evento.objects.filter(fechaInicio=formulario.cleaned_data['fecha'])
             
-    return render(request, 'busqueda_peliculas.html', {'formulario':formulario, 'peliculas':peliculas, 'STATIC_URL':settings.STATIC_URL})
+    return render(request, 'busqueda_eventos.html', {'formulario':formulario, 'eventos':eventos, 'STATIC_URL':settings.STATIC_URL})
 
 
-def mostrar_puntuaciones_usuario(request):
-    formulario = UsuarioBusquedaForm()
-    puntuaciones = None
+def mostrar_eventos_idioma(request):
+    formulario = EventosBusquedaIdiomasForm()
+    eventos = None
     
     if request.method=='POST':
-        formulario = UsuarioBusquedaForm(request.POST)
+        formulario = EventosBusquedaIdiomasForm(request.POST)
         
         if formulario.is_valid():
-            puntuaciones = Puntuacion.objects.filter(idUsuario = Usuario.objects.get(pk=formulario.cleaned_data['idUsuario']))
+            eventos = Evento.objects.filter(nombre = Lenguaje.objects.get(full_nombre__startswith=formulario.cleaned_data['nombre']))
             
-    return render(request, 'puntuaciones_usuario.html', {'formulario':formulario, 'puntuaciones':puntuaciones, 'STATIC_URL':settings.STATIC_URL})
+    return render(request, 'idiomas_eventos.html', {'formulario':formulario, 'eventos':eventos, 'STATIC_URL':settings.STATIC_URL})
 
 
 

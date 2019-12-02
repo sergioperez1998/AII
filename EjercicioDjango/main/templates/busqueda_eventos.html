@@ -1,0 +1,42 @@
+{% extends 'master.html' %}
+
+{% block titulo %} Busqueda de peliculas por fecha {% endblock %}
+
+
+{% block buscarEventos %} uk-active {% endblock %}
+
+{% block paginaActiva %}
+	<li class="uk-active"><span>Busqueda de Eventos</span></li>
+{% endblock %}
+		    
+
+{% block contenido %} 
+    <div class="uk-animation-slide-bottom">
+    	<form class="uk-form" id="formulario" method="post" action=''>{% csrf_token %}
+    		<fieldset>
+    			<legend>Busqueda de Eventos</legend>
+				<input type="text" name="fecha" id="id_year" placeholder="Fecha de evento dd/mm/yyyy"/>
+    			<BR><BR>
+
+    			<input class="uk-button" type='submit' value='Realizar Busqueda'/>
+    		</fieldset>
+    	</form>
+	    
+	    <hr>
+
+	    {% if eventos %}
+		    <h3> Eventos en la fecha dada:  {{ eventos|length }}</h3>
+		    <dl class="uk-description-list-line">
+
+			{% for row in eventos %}
+			   <dt>{{row.nombre}}</dt>
+			   <dd>Fecha inicio: {{row.fechaInicio}}</dd>
+			   <dd>Fecha Fin: {{row.fechaFin}}</dd>
+			   <dd>Precio: {{row.precio}}</dd>	    
+			{% endfor %}
+
+			</dl>
+
+		{% endif %}
+	</div>
+{% endblock %}
