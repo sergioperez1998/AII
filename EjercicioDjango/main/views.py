@@ -151,16 +151,15 @@ def populateMunicipio():
 def populateEventos():
     print("Loading events...")
     Evento.objects.all().delete()
-    
     lista_eventos =[]
     lista_idioma=[]
     dict_categorias={}  #  diccionario de categorias de cada pelicula (idPelicula y lista de categorias)
     fileobj=open(path+"\\dataset-B.csv", "r")
     for line in fileobj.readlines():
         rip = line.strip().split(';')
-        lista_eventos.append(Evento(nombre=rip[0], tipo=Tipo.objects.get(nombre=rip[1]), fechaInicio=rip[2],fechaFin=rip[3], precio=rip[4],lenguaje=Lenguaje.objects.get(nombre=rip[5],municipio=Municipio.objects.get(nombre=rip[6])))
+        lista_eventos.append(Evento(nombre=rip[0], tipo=Tipo.objects.get(nombre=rip[1]), fechaInicio=rip[2],fechaFin=rip[3], precio=rip[4],lenguaje=Lenguaje.objects.get(nombre=rip[5]),municipio=Municipio.objects.get(nombre=rip[6])))
         idioma = rip[5]
-        if "/" in string:
+        if "/" in idioma:
             parseado0 = idioma.strip().split("/")[0]
             parseado1 = idioma.strip().split("/")[1]
             lista_idioma.append(Lenguaje.objects.get(pk =parseado0))
@@ -168,16 +167,9 @@ def populateEventos():
         else:
             lista_idioma.append(Lenguaje.objects.get(pk =idioma))
     fileobj.close()    
-    Pelicula.objects.bulk_create(lista_peliculas)
-
-    dict={}
-    for pelicula in Pelicula.objects.all():
-        pelicula.categorias.set(dict_categorias[pelicula.idPelicula])
-        dict[pelicula.idPelicula]=pelicula
-    
-    print("Movies inserted: " + str(Pelicula.objects.count()))
+    Evento.objects.bulk_create(lista_eventos)    
+    print("Events inserted: " + str(Evento.objects.count()))
     print("---------------------------------------------------------")
-    return(dict)
 
 
 
