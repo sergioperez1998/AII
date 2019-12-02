@@ -1,0 +1,22 @@
+{% extends 'master.html' %}
+
+{% block titulo %} Lista de los dos tipos de eventos mas frecuntes {% endblock %}
+
+
+{% block eventosFrecuentes %} uk-active {% endblock %}
+
+
+{% block contenido %} 
+    <div class="uk-animation-shake">
+	    <dl class="uk-description-list-line">
+
+		{% for row in eventos %}
+		   <dt>{{row.nombre}}</dt>
+		   <dd>Fecha inicio: {{row.fechaInicio}}</dd>
+		   <dd>Fecha Fin: {{row.fechaFin}}</dd>
+		   <dd>Precio: {{row.precio}}</dd>	
+		{% endfor %}
+
+		</dl>
+	</div>
+{% endblock %}

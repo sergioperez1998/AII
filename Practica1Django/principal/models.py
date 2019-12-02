@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from django.db import models
 <<<<<<< HEAD
 from django.contrib.auth.models import User
@@ -101,3 +102,5 @@ class puntuacion(models.Model):
         return self.idCategoria
     
 >>>>>>> a458b39c3855db1513e8681023efea2844d9d5e7
+=======
+>>>>>>> a2c032a6f58d0c862c39762df15cabe0e0a37b1a

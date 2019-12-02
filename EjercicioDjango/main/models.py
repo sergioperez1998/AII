@@ -1,11 +1,9 @@
 #encoding:utf-8
 
 from django.db import models
-from django.core.validators import MinValueValidator, MaxValueValidator
 
-class Ocupacion(models.Model):
-    ocupacionId = models.AutoField(primary_key=True)
-    nombre = models.TextField(verbose_name='Ocupación', unique=True)
+class Municipio(models.Model):
+    nombre = models.TextField(verbose_name='Municipio', unique=True)
 
     def __str__(self):
         return self.nombre
@@ -13,22 +11,8 @@ class Ocupacion(models.Model):
     class Meta:
         ordering = ('nombre', )
 
-class Usuario(models.Model):
-    idUsuario = models.TextField(primary_key=True)
-    edad = models.IntegerField(verbose_name='Edad', help_text='Debe introducir una edad')
-    sexo = models.CharField(max_length=1, verbose_name='Sexo', help_text='Debe elegir entre M o F')
-    ocupacion = models.ForeignKey(Ocupacion, on_delete=models.SET_NULL, null=True)
-    codigoPostal = models.TextField(verbose_name='Código Postal')
-
-    def __str__(self):
-        return self.idUsuario
-    
-    class Meta:
-        ordering = ('idUsuario', )
-
-class Categoria(models.Model):
-    idCategoria = models.TextField(primary_key=True)
-    nombre = models.TextField(verbose_name='Categoría')
+class Tipo(models.Model):
+    nombre = models.TextField(verbose_name='Tipo')
 
     def __str__(self):
         return self.nombre
@@ -36,28 +20,26 @@ class Categoria(models.Model):
     class Meta:
         ordering =('nombre', )
 
-class Pelicula(models.Model):
-    idPelicula = models.TextField(primary_key=True)
-    titulo = models.TextField(verbose_name='Título')
-    fechaEstreno = models.DateField(verbose_name='Fecha de Estreno', null=True)
-    imdbUrl = models.URLField(verbose_name='URL en IMDB')
-    categorias = models.ManyToManyField(Categoria)
-    puntuaciones = models.ManyToManyField(Usuario, through='Puntuacion')
+class Lenguaje(models.Model):
+    nombre = models.TextField(verbose_name='Lenguaje')
 
     def __str__(self):
-        return self.titulo
+        return self.nombre
     
     class Meta:
-        ordering = ('titulo', 'fechaEstreno', )
+        ordering =('nombre', )
 
-class Puntuacion(models.Model):
-    PUNTUACIONES = ((1, 'Muy mala'), (2,'Mala'), (3,'Regular'), (4,'Buena'), (5,'Muy Buena'))
-    idUsuario = models.ForeignKey(Usuario,on_delete=models.CASCADE)
-    idPelicula = models.ForeignKey(Pelicula,on_delete=models.CASCADE)
-    puntuacion = models.IntegerField(verbose_name='Puntuación', validators=[MinValueValidator(0), MaxValueValidator(5)], choices=PUNTUACIONES)
-    
+class Evento(models.Model):
+    nombre = models.TextField(verbose_name='Nombre', help_text='Debe introducir un nombre')
+    fechaInicio = models.DateField(verbose_name='Fecha Inicio', null=True)
+    fechaFin = models.DateField(verbose_name='Fecha Fin', null=True)
+    precio = models.TextField(verbose_name='Precio', help_text='Debe introducir un precio, o gratis')
+    tipo = models.ForeignKey(Tipo, on_delete=models.CASCADE)
+    municipio = models.ForeignKey(Municipio, on_delete=models.CASCADE)
+    lenguaje = models.ManyToManyField(Lenguaje, on_delete=models.CASCADE)
+
     def __str__(self):
-        return (str(self.puntuacion))
+        return self.nombre
     
     class Meta:
-        ordering=('idPelicula','idUsuario', )
+        ordering = ('nombre', )
