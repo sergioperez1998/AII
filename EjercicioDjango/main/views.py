@@ -11,16 +11,21 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 
-path = "C:\\Users\\Usuario\\Desktop\\Universidad\\cuarto año\\AII\\repositorio git\\AII\\EjercicioDjango\\data"
+path = "C:\\Users\\sergi\\Desktop\\Mi Equipo\\Facultad\\CUARTO CURSO\\ACCESO INTELIGENTE A LA INFORMACION\\REPO\\AII\\EjercicioDjango\\data"
 
 #Funcion de acceso restringido que carga los datos en la BD  
 @login_required(login_url='/ingresar')
 def populateDatabase(request):
-    populateOccupations()
+    
     populateGenres()
     u=populateUsers()
     m=populateMovies()
     populateRatings(u,m)  #USAMOS LOS DICCIONARIOS DE USUARIOS Y PELICULAS PARA ACELERAR LA CARGA EN PUNTUACIONES
+    
+    
+    populateLenguas()
+    populateTipoEvento()
+    populateMunicipio()
     logout(request)  # se hace logout para obligar a login cada vez que se vaya a poblar la BD
     return HttpResponseRedirect('/index.html')
 
@@ -86,27 +91,113 @@ def ingresar(request):
     return render(request, 'ingresar.html', {'formulario':formulario})
 
 
-def populateOccupations():
-    print("Loading occupations...")
-    Ocupacion.objects.all().delete()
+
+
+
+
+
+
+
+
+
+
+
+
+def populateLenguas():
+    
+    print("Loading languages...")
+    Lenguaje.objects.all().delete()
     
     lista=[]
-    fileobj=open(path+"\\u.occupation", "r")
+    fileobj=open(path+"\\lenguas.csv", "r")
     for line in fileobj.readlines():
-        lista.append(Ocupacion(nombre=str(line.strip())))
+        lista.append(Lenguaje(nombre=str(line.strip())))
     fileobj.close()
-    Ocupacion.objects.bulk_create(lista)  # bulk_create hace la carga masiva para acelerar el proceso
+    Lenguaje.objects.bulk_create(lista)
     
-    print("Occupations inserted: " + str(Ocupacion.objects.count()))
+    print("Lenguages inserted: " + str(Lenguaje.objects.count()))
     print("---------------------------------------------------------")
-
-
-def populateGenres():
-    print("Loading Movie Genres...")
-    Categoria.objects.all().delete()
+    
+def populateTipoEvento():
+    
+    print("Loading languages...")
+    Tipo.objects.all().delete()
     
     lista=[]
-    fileobj=open(path+"\\u.genre", "r")
+    fileobj=open(path+"\\tipoevento.csv", "r")
+    for line in fileobj.readlines():
+        lista.append(Tipo(nombre=str(line.strip())))
+    fileobj.close()
+    Tipo.objects.bulk_create(lista)
+    
+    print("Events type inserted: " + str(Tipo.objects.count()))
+    print("---------------------------------------------------------")
+    
+def populateMunicipio():
+    
+    print("Loading towns...")
+    Municipio.objects.all().delete()
+    
+    lista=[]
+    fileobj=open(path+"\\municipio.csv", "r")
+    for line in fileobj.readlines():
+        lista.append(Municipio(nombre=str(line.strip())))
+    fileobj.close()
+    Municipio.objects.bulk_create(lista)
+    
+    print("Towns inserted: " + str(Municipio.objects.count()))
+    print("---------------------------------------------------------")    
+
+def populateEventos():
+    print("Loading events...")
+    Evento.objects.all().delete()
+    
+    lista_eventos =[]
+    lista_idioma=[]
+    dict_categorias={}  #  diccionario de categorias de cada pelicula (idPelicula y lista de categorias)
+    fileobj=open(path+"\\dataset-B.csv", "r")
+    for line in fileobj.readlines():
+        rip = line.strip().split(';')
+        lista_eventos.append(Evento(nombre=rip[0], tipo=Tipo.objects.get(nombre=rip[1]), fechaInicio=rip[2],fechaFin=rip[3], precio=rip[4],lenguaje=Lenguaje.objects.get(nombre=rip[5],municipio=Municipio.objects.get(nombre=rip[6])))
+        idioma = rip[5]
+        if "/" in string:
+            parseado0 = idioma.strip().split("/")[0]
+            parseado1 = idioma.strip().split("/")[1]
+            lista_idioma.append(Lenguaje.objects.get(pk =parseado0))
+            lista_idioma.append(Lenguaje.objects.get(pk =parseado1))
+        else:
+            lista_idioma.append(Lenguaje.objects.get(pk =idioma))
+    fileobj.close()    
+    Pelicula.objects.bulk_create(lista_peliculas)
+
+    dict={}
+    for pelicula in Pelicula.objects.all():
+        pelicula.categorias.set(dict_categorias[pelicula.idPelicula])
+        dict[pelicula.idPelicula]=pelicula
+    
+    print("Movies inserted: " + str(Pelicula.objects.count()))
+    print("---------------------------------------------------------")
+    return(dict)
+
+
+
+
+
+
+
+
+
+
+
+
+
+def populateTipoEvento():
+    print("Loading type events...")
+    Tipo.objects.all().delete()
+    
+    lista=[]
+    fileobj=open(path+"\\tipoevento.csv", "r")
+    i=0
     for line in fileobj.readlines():
         rip = str(line.strip()).split('|')
         if len(rip) != 2:
