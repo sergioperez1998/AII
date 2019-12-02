@@ -40,7 +40,7 @@ class Evento(models.Model):
     precio = models.TextField(verbose_name='Precio', help_text='Debe introducir un precio, o gratis')
     tipo = models.ForeignKey(Tipo, on_delete=models.CASCADE)
     municipio = models.ForeignKey(Municipio, on_delete=models.CASCADE)
-    lenguaje = models.ManyToManyField(Lenguaje, on_delete=models.CASCADE)
+    lenguaje = models.ForeignKey(Lenguaje, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.idEvento
