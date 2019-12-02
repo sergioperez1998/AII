@@ -1,4 +1,4 @@
-from main.models import Usuario, Categoria, Pelicula, Puntuacion, Ocupacion
+from main.models import Evento, Municipio, Tipo, Lenguaje
 from django.contrib import admin
 
 admin.site.register(Ocupacion)
