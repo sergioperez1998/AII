@@ -3,7 +3,6 @@
 from django.db import models
 
 class Municipio(models.Model):
-    municipioId = models.AutoField(primary_key=True)
     nombre = models.TextField(verbose_name='Municipio', unique=True)
 
     def __str__(self):
@@ -13,7 +12,6 @@ class Municipio(models.Model):
         ordering = ('nombre', )
 
 class Tipo(models.Model):
-    idTipo = models.TextField(primary_key=True)
     nombre = models.TextField(verbose_name='Tipo')
 
     def __str__(self):
@@ -23,7 +21,6 @@ class Tipo(models.Model):
         ordering =('nombre', )
 
 class Lenguaje(models.Model):
-    idLenguaje = models.TextField(primary_key=True)
     nombre = models.TextField(verbose_name='Lenguaje')
 
     def __str__(self):
@@ -33,7 +30,6 @@ class Lenguaje(models.Model):
         ordering =('nombre', )
 
 class Evento(models.Model):
-    idEvento = models.TextField(primary_key=True)
     nombre = models.TextField(verbose_name='Nombre', help_text='Debe introducir un nombre')
     fechaInicio = models.DateField(verbose_name='Fecha Inicio', null=True)
     fechaFin = models.DateField(verbose_name='Fecha Fin', null=True)
@@ -43,7 +39,7 @@ class Evento(models.Model):
     lenguaje = models.ManyToManyField(Lenguaje, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.idEvento
+        return self.nombre
     
     class Meta:
-        ordering = ('idEvento', )
+        ordering = ('nombre', )
