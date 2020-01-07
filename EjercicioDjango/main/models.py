@@ -21,7 +21,7 @@ class Tipo(models.Model):
         ordering =('nombre', )
 
 class Lenguaje(models.Model):
-    nombre = models.TextField(verbose_name='Lenguaje')
+    nombre = models.TextField(verbose_name='Lenguaje', primary_key = True)
 
     def __str__(self):
         return self.nombre
@@ -36,7 +36,7 @@ class Evento(models.Model):
     precio = models.TextField(verbose_name='Precio', help_text='Debe introducir un precio, o gratis')
     tipo = models.ForeignKey(Tipo, on_delete=models.CASCADE)
     municipio = models.ForeignKey(Municipio, on_delete=models.CASCADE)
-    lenguaje = models.ManyToManyField(Lenguaje, on_delete=models.CASCADE)
+    lenguaje = models.ManyToManyField(Lenguaje)
 
     def __str__(self):
         return self.nombre

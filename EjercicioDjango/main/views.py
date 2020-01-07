@@ -11,7 +11,11 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 
+<<<<<<< HEAD
 path = "C:\\Users\\sergi\\Desktop\\Mi Equipo\\Facultad\\CUARTO CURSO\\ACCESO INTELIGENTE A LA INFORMACION\\REPO\\AII\\EjercicioDjango\\data"
+=======
+path = "data"
+>>>>>>> cf0e707e58c23ff049d73c873c00a57aee74f07f
 
 #Funcion de acceso restringido que carga los datos en la BD  
 @login_required(login_url='/ingresar')
@@ -32,7 +36,7 @@ def mostrar_eventos(request):
 
 def mostrar_mejores_eventos(request):  
     eventos = Evento.objects.annotate(numeroTipo=Count('tipo')).order_by('-numeroTipo')[:2]
-    return render(request, 'eventos_frecuenes.html', {'eventos':eventos, 'STATIC_URL':settings.STATIC_URL})
+    return render(request, 'eventos_frecuentes.html', {'eventos':eventos, 'STATIC_URL':settings.STATIC_URL})
     
 
 
@@ -97,12 +101,12 @@ def populateLenguas():
     fileobj.close()
     Lenguaje.objects.bulk_create(lista)
     
-    print("Lenguages inserted: " + str(Lenguaje.objects.count()))
+    print("Languages inserted: " + str(Lenguaje.objects.count()))
     print("---------------------------------------------------------")
     
 def populateTipoEvento():
     
-    print("Loading languages...")
+    print("Loading types...")
     Tipo.objects.all().delete()
     
     lista=[]
@@ -139,7 +143,7 @@ def populateEventos():
     fileobj=open(path+"\\dataset-B.csv", "r")
     for line in fileobj.readlines():
         rip = line.strip().split(';')
-        lista_eventos.append(Evento(nombre=rip[0], tipo=Tipo.objects.get(nombre=rip[1]), fechaInicio=rip[2],fechaFin=rip[3], precio=rip[4],lenguaje=Lenguaje.objects.get(nombre=rip[5]),municipio=Municipio.objects.get(nombre=rip[6])))
+        lista_eventos.append(Evento(nombre=rip[0], tipo=Tipo.objects.get(nombre=rip[1]), fechaInicio=rip[2],fechaFin=rip[3], precio=str(rip[4]),municipio=Municipio.objects.get(nombre=rip[6])))
         idioma = rip[5]
         if "/" in idioma:
             parseado0 = idioma.strip().split("/")[0]
@@ -149,6 +153,11 @@ def populateEventos():
         else:
             lista_idioma.append(Lenguaje.objects.get(pk =idioma))
     fileobj.close()    
-    Evento.objects.bulk_create(lista_eventos)    
+    Evento.objects.bulk_create(lista_eventos) 
+    
+    i=0
+    for Eventos in Evento.objects.all():
+        Eventos.lenguaje.set(lista_idioma[i])  
+        i=i+1 
     print("Events inserted: " + str(Evento.objects.count()))
     print("---------------------------------------------------------")
