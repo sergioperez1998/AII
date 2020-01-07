@@ -15,8 +15,6 @@ class Usuario(models.Model):
         return self.categoriaPreferida
     
 
-    
-
 class Director(models.Model):
     biografia=models.TextField(help_text='biografia',null=False)
     peliculasDirigidas=models.TextField(help_text='escribir peliculas separadas por comas ',null=False)

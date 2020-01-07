@@ -11,11 +11,16 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 
+<<<<<<< HEAD
+path = "C:\\Users\\sergi\\Desktop\\Mi Equipo\\Facultad\\CUARTO CURSO\\ACCESO INTELIGENTE A LA INFORMACION\\REPO\\AII\\EjercicioDjango\\data"
+=======
 path = "data"
+>>>>>>> cf0e707e58c23ff049d73c873c00a57aee74f07f
 
 #Funcion de acceso restringido que carga los datos en la BD  
 @login_required(login_url='/ingresar')
 def populateDatabase(request):
+
     populateLenguas()
     populateTipoEvento()
     populateMunicipio()
@@ -84,8 +89,6 @@ def ingresar(request):
             return (HttpResponse('<html><body>ERROR: USUARIO O CONTARSE&Ntilde;A INCORRECTOS </body></html>'))
                      
     return render(request, 'ingresar.html', {'formulario':formulario})
-
-
 def populateLenguas():
     
     print("Loading languages...")
@@ -158,4 +161,3 @@ def populateEventos():
         i=i+1 
     print("Events inserted: " + str(Evento.objects.count()))
     print("---------------------------------------------------------")
-
