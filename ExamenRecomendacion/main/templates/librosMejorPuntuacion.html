@@ -1,0 +1,28 @@
+<html>
+<head>
+<title>Prácticas Sistemas de Recomendación II</title>
+</head>
+<body>
+{% include 'header.html' %}
+<section>
+<h1>Los 3 libros mejor puntuados</h1>
+
+	<table>
+		<tr>
+			<th>Id</th>
+			<th>Titulo</th>
+			<th>Autor</th>
+		</tr>
+		{% for libro in mejoresLibros %}
+		<tr>
+			<td>{{libro.bookId}}</td>
+			<td>{{libro.titulo}}</td>
+			<td>{{libro.autor}}</td>
+		</tr>
+		{% endfor %}	
+	</table>
+
+
+</section>
+</body>
+</html>
