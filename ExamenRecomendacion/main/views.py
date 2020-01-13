@@ -5,6 +5,7 @@ from main.models import Usuario, Libro, Puntuacion
 from main.forms import UserForm, BookForm
 from django.shortcuts import render, get_object_or_404
 from main.recommendations import  transformPrefs, calculateSimilarItems, getRecommendations, topMatches
+from django.db.models.aggregates import Avg
 
 # Create your views here.
 def index(request): 
@@ -38,6 +39,17 @@ def apartadoA(request):
             return render(request,'ratedBooks.html', {'usuario':user})
     form=UserForm()
     return render(request,'search_user.html', {'form':form })
+
+#Apartado A
+def apartadoB(request):
+    
+    libros=[]
+    mejoresPuntuaciones=Puntuacion.objects.all().aggregate(avg_rating = Avg('puntuacion')).order_by('-avg_rating')[:3]
+    for p in mejoresPuntuaciones:
+        idLibro = p.bookId
+        libro = get_object_or_404(Libro, bookId=idLibro)
+        libros.append(libro)
+    return render(request,'librosMejorPuntuacion.html',{"mejoresLibros":libros})
 
 #Apartado C
 def similarBooks(request):

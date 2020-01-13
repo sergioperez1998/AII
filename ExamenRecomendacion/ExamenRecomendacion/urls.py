@@ -21,4 +21,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('populate/', views.populateDB),
     path('', views.index),
+    path('/apartadoA', views.apartadoA, name="apartado1"),
+    path('/apartadoB', views.apartadoB, name="apartado2"),
+    path('/apartadoC', views.similarBooks, name="apartado3"),
+    path('/apartadoD', views.recommendedBooksUser, name="apartado4"),
 ]
