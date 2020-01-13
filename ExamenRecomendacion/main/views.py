@@ -7,3 +7,4 @@ def index(request):
 def populateDB(request):
     populateDatabase() 
     return render(request,'populate.html')
+
