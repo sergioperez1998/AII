@@ -1,7 +1,7 @@
 import shelve
 from django.shortcuts import render
 from main.populate import populateDatabase
-from main.models import UserInformation, Book, Rating
+from main.models import Usuario, Libro, Puntuacion
 from main.forms import UserForm, BookForm
 from django.shortcuts import render, get_object_or_404
 from main.recommendations import  transformPrefs, calculateSimilarItems, getRecommendations, topMatches
@@ -16,11 +16,11 @@ def populateDB(request):
 def loadDict():
     Prefs={}   # matriz de usuarios y puntuaciones a cada a items
     shelf = shelve.open("dataRS.dat")
-    ratings = Rating.objects.all() 
+    ratings = Puntuacion.objects.all() 
     for ra in ratings:
-        user = int(ra.user.id)
-        itemid = int(ra.book.id)
-        rating = float(ra.rating)
+        user = int(ra.idUsuario.id)
+        itemid = int(ra.bookId.id)
+        rating = float(ra.puntuacion)
         Prefs.setdefault(user, {})
         Prefs[user][itemid] = rating
     shelf['Prefs']=Prefs
@@ -33,8 +33,8 @@ def apartadoA(request):
     if request.method=='GET':
         form = UserForm(request.GET, request.FILES)
         if form.is_valid():
-            idUser = form.cleaned_data['id']
-            user = get_object_or_404(UserInformation, pk=idUser)
+            idUsuario = form.cleaned_data['id']
+            user = get_object_or_404(Usuario, pk=idUsuario)
             return render(request,'ratedBooks.html', {'usuario':user})
     form=UserForm()
     return render(request,'search_user.html', {'form':form })
@@ -46,7 +46,7 @@ def similarBooks(request):
         form = BookForm(request.GET, request.FILES)
         if form.is_valid():
             idBook = form.cleaned_data['id']
-            book = get_object_or_404(Book, pk=idBook)
+            book = get_object_or_404(Libro, pk=idBook)
             shelf = shelve.open("dataRS.dat")
             ItemsPrefs = shelf['ItemsPrefs']
             shelf.close()
@@ -54,7 +54,7 @@ def similarBooks(request):
             books = []
             similar = []
             for re in recommended:
-                books.append(Book.objects.get(pk=re[1]))
+                books.append(Libro.objects.get(pk=re[1]))
                 similar.append(re[0])
             items= zip(books,similar)
             return render(request,'similarBooks.html', {'book': book,'books': items})
@@ -67,7 +67,7 @@ def recommendedBooksUser(request):
         form = UserForm(request.GET, request.FILES)
         if form.is_valid():
             idUser = form.cleaned_data['id']
-            user = get_object_or_404(UserInformation, pk=idUser)
+            user = get_object_or_404(Usuario, pk=idUser)
             shelf = shelve.open("dataRS.dat")
             Prefs = shelf['Prefs']
             shelf.close()
@@ -76,7 +76,7 @@ def recommendedBooksUser(request):
             books = []
             scores = []
             for re in recommended:
-                books.append(Book.objects.get(pk=re[1]))
+                books.append(Libro.objects.get(pk=re[1]))
                 scores.append(re[0])
             items= zip(books,scores)
             return render(request,'recommendationItems.html', {'user': user, 'items': items})
