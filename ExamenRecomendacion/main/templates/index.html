@@ -1,0 +1,26 @@
+<html>
+<head>
+<title>Prácticas Sistemas de Recomendación II</title>
+</head>
+<body>
+{% include 'header.html' %}
+<h1>Bienvenido al Sistema de Recomendación II</h1> 
+<p>
+Se desea construir una pagina web, que permita recomendar a usuarios libros en funcion de las puntuaciones que han dado otros usuarios y los gustos de estos.
+Construir el modelo de datos en Django que almacene la informacion siguiente:
+
+a)	Libro: Bookid, Titulo, Autor, Genero, Idioma, Número total de puntuaciones recibidas para puntuaciones de 1, 2, 3, 4 y 5.
+b)	Puntuacion: IdUsuario, Bookid, Puntuacion (0-5).
+Las puntuaciones son numericas entre 1 y 5.
+
+
+Se pide construir una web con un menu principal, que permita las siguientes opciones:
+
+a)	Dado un usuario (IdUsuario), muestre los libros que ha puntuado (titulo y autor) y puntuacion que les ha dado.
+b)	Muestre los tres libros (Bookid, titulo y autor) mejor puntuados (puntuacion media).
+c)	Dada un libro (Bookid), presente los dos libros que mas se le parecen.
+d)	Dado un usuario (IdUsuario), le recomiende dos libros que no haya puntuado (Bookid, titulo y autor) usando un sistema de recomendacion de tipo filtrado colaborativo basado en usuarios.
+
+</p>
+</body>
+</html>
