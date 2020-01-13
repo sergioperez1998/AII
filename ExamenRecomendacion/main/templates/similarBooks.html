@@ -1,0 +1,16 @@
+<html>
+<head>
+<title>Prácticas Sistemas de Recomendación II</title>
+</head>
+<body>
+{% include 'header.html' %}
+<section>
+<h1>Dos Libros que mas se parecen a {{book.titulo}} son:</h1>
+<l>
+{% for b, s in books %}
+<li>Titulo: {{b.titulo}}   Similarity: {{s | floatformat:"2"}}</li>
+{% endfor %}
+</l>
+</section>
+</body>
+</html>
