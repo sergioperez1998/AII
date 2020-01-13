@@ -28,6 +28,17 @@ def loadDict():
     shelf['SimItems']=calculateSimilarItems(Prefs, n=10)
     shelf.close()
 
+#Apartado A
+def apartadoA(request):
+    if request.method=='GET':
+        form = UserForm(request.GET, request.FILES)
+        if form.is_valid():
+            idUser = form.cleaned_data['id']
+            user = get_object_or_404(UserInformation, pk=idUser)
+            return render(request,'ratedBooks.html', {'usuario':user})
+    form=UserForm()
+    return render(request,'search_user.html', {'form':form })
+
 #Apartado C
 def similarBooks(request):
     book = None
