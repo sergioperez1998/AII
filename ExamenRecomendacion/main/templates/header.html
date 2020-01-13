@@ -4,10 +4,10 @@
 		<li><a href="/">Inicio</a></li>
 		<li><a href="/populate">Poblar la Base de Datos</a></li>
 		<li><a href="/loadRS">Cargar el Sistema de Recomendacion</a></li>
-		<li><a href="/apartadoA">Insertar apartado a</a></li>
-		<li><a href="/apartadoB">Insertar apartado b</a></li>
-		<li><a href="/similarBooks">Dos libros que mas se parecen a otro</a></li>
-		<li><a href="/recommendedUsersBooks">Recomienda tres Usuarios a un Libro</a></li>		
+		<li><a href="{% url 'apartado1' %}">Libros puntuados por un Usuario</a></li>
+		<li><a href="{% url 'apartado2' %}">Tres Libros mejor puntuados</a></li>
+		<li><a href="{% url 'apartado3' %}">Dos Libros que mas se parecen a otro</a></li>
+		<li><a href="{% url 'apartado4' %}">Recomienda tres Usuarios a un Libro</a></li>		
 	</ul>
 </nav>
 </header>

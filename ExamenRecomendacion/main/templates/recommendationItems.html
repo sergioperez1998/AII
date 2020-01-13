@@ -7,7 +7,8 @@
 <h1>Libros Recomendados para el Usuario {{user.id}}</h1>
 {% for item, score in items %}
 <ul>
-<li>Titulo: {{item.titulo}}  Score:{{score | floatformat:"2"}}</li>
+<li>Bookid: {{item.bookId}} - Titulo: {{item.titulo}} - Autor: {{item.autor}}</li>
+<li>Score:{{score | floatformat:"2"}}</li>
 </ul>
 {% empty %}
 <h2> Insufficient user data </h2>

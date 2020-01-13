@@ -1,0 +1,16 @@
+<html>
+<head>
+<title>Prácticas Sistemas de Recomendación II</title>
+</head>
+<body>
+{% include 'header.html' %}
+<section>
+<h1>Libros y Puntuaciones para el Usuario {{usuario.id}}</h1>
+{% for rating in usuario.rating_set.all %}
+<ul>Libro: {{rating.bookId.titulo}} - Autor: {{rating.bookId.autor}} - Rating: {{rating.puntuacion}}</ul>
+{% empty %}
+<h2> El Usuario no ha puntuado ningun Libro </h2>
+{% endfor %}
+</section>
+</body>
+</html>
