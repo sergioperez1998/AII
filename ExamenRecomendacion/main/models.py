@@ -21,6 +21,6 @@ class Puntuacion(models.Model):
     bookId=models.ForeignKey(Libro, on_delete=models.CASCADE, null=True)
     puntuacion= models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)])
     def __str__(self):
-        return str(self.genreName)
+        return str(self.puntuacion)
     
 

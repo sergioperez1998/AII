@@ -7,7 +7,7 @@
 <section>
 <h1>Libros y Puntuaciones para el Usuario {{usuario.id}}</h1>
 {% for rating in usuario.rating_set.all %}
-<ul>Libro: {{rating.book.titulo}} - Rating: {{rating.rating}}</ul>
+<ul>Libro: {{rating.bookId.titulo}} - Autor: {{rating.bookId.autor}} - Rating: {{rating.puntuacion}}</ul>
 {% empty %}
 <h2> El Usuario no ha puntuado ningun Libro </h2>
 {% endfor %}
