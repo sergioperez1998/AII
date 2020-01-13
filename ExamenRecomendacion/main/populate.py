@@ -67,7 +67,7 @@ def populatePuntuaciones():
             if  i!=0:
         
                 
-                u=Puntuacion(bookId=line[0], idUsuario=line[1], puntuacion=line[2])
+                u=Puntuacion(bookId=line[0], idUsuario=Usuario.objects.get(idUsuario=line[1]), puntuacion=line[2])
                 lista.append(u) 
             
         i=i+1   
