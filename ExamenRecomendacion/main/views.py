@@ -13,6 +13,7 @@ def populateDB(request):
     populateDatabase() 
     return render(request,'populate.html')
 
+
 def loadDict():
     Prefs={}   # matriz de usuarios y puntuaciones a cada a items
     shelf = shelve.open("dataRS.dat")
@@ -82,3 +83,4 @@ def recommendedBooksUser(request):
             return render(request,'recommendationItems.html', {'user': user, 'items': items})
     form = UserForm()
     return render(request,'search_user.html', {'form': form})
+
